@@ -22,8 +22,6 @@ defmodule ArtStore.Umbrella.MixProject do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
   defp deps do
-    [
-      {:distillery, "~> 2.1"}
-    ]
+    []
   end
 end

@@ -23,7 +23,7 @@ defmodule ArtStore.MixProject do
   def application do
     [
       mod: {ArtStore.Application, []},
-      extra_applications: [:logger, :runtime_tools, :ssl]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
