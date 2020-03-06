@@ -1,35 +1,49 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>A productive web framework that<br/>does not compromise speed or maintainability.</p>
+
+<section class="content-main container">
+  <div class="aos-init" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-out-quad">
+    <div 
+      class="cycle-slideshow auto" 
+      data-cycle-fx="fade" 
+      data-cycle-pause-on-hover="true"
+      data-cycle-timeout="4000" 
+      data-cycle-speed="500" 
+      data-cycle-swipe="true" 
+      data-cycle-log="true" 
+      data-cycle-loader="true" 
+      data-cycle-progressive="#images2" 
+      style="position: relative;">
+      <img 
+          data-cycle-title="" 
+          class="slides cycle-slide cycle-sentinel" 
+          data-cycle-timeout="5000"
+          src='<%= Routes.static_path(@conn, "/images/streams-of-thought/siblings.jpg") %>'  
+          style="display: block; position: static; top: 0px; left: 0px; z-index: 99; opacity: 1;">
+      <div class="cycle-caption">
+      </div>  
+      <script id="images2" type="text/cycle">
+      </script>
+      <div class="cycle-prev"></div>
+      <div class="cycle-next"></div>
+    </div>
+    <div class="cycle-caption"><span style="float:right;"></span></div>
+  </div>
 </section>
 
-<section class="row">
-  <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.4/CHANGELOG.md">v1.4 Changelog</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-    </ul>
-  </article>
-</section>
+<script> 
+  var images = new Array()
+  var container = document.getElementById('images2');
+  var docFrag = document.createDocumentFragment();
+  
+  function preload() {
+    for (i = 0; i < preload.arguments.length; i++) {
+      images[i] = new Image()
+      images[i].src = preload.arguments[i]
+      docFrag.appendChild(images[i]);
+    }
+    container.appendChild(docFrag);
+  }
+  var image2 ='<%= Routes.static_path(@conn, "/images/streams-of-thought/dance.jpg") %>';
+  preload(
+      image2
+  );
+</script>
