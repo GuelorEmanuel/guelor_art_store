@@ -12,7 +12,7 @@ database_url =
     """
 
 config :art_store, ArtStore.Repo,
-  # ssl: true,
+  ssl: true,
   url: database_url,
   pool_size: String.to_integer("2")
 
@@ -35,7 +35,7 @@ config :art_store_web, ArtStoreWeb.Endpoint,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :art_store_web, ArtStoreWeb.Endpoint, server: true
+config :art_store_web, ArtStoreWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
