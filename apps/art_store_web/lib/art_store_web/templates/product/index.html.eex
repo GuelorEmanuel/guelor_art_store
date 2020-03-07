@@ -1,3 +1,4 @@
+<h1>Listing Products</h1>
 <div class="outer">
   <%= for product <- @products do %>
     <div class="container cf">

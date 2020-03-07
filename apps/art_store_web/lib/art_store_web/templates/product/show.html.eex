@@ -1,3 +1,4 @@
+<h1>Show Product</h1>
 <div class="container">
    <div id="productNav"><%= link "← Back to Store", to: Routes.product_path(@conn, :index) %></div>
    <div id="productSummary" class="clear">
