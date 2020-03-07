@@ -15,8 +15,8 @@
         <nav class="main-nav" role="navigation">
           <p>
             <b>Guelor Emanuel</b>
+            <a  href="<%= Routes.product_path(@conn, :index)%>">Store</a>
             <a href="<%= Routes.page_path(@conn, :index)%>">Art</a>
-            <%# <a>Store</a> %>
             <%# <a>Blog</a> %>
             <a href="<%= Routes.about_path(@conn, :index)%>">About</a>
           </p>
@@ -31,6 +31,7 @@
         <nav class="main-nav --footer" role="navigation">
           <p>
             <b>Guelor Emanuel</b>
+            <a  href="<%= Routes.product_path(@conn, :index)%>">Store</a>
             <a href="<%= Routes.page_path(@conn, :index)%>">Art</a>
             <%# <a>Store</a> %>
             <%# <a>Blog</a> %>

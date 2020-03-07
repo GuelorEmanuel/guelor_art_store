@@ -16,8 +16,9 @@ defmodule ArtStoreWeb.Router do
   scope "/", ArtStoreWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/art", PageController, :index
     get "/about", AboutController, :index
+    resources "/", ProductController
   end
 
   # Other scopes may use custom stacks.
