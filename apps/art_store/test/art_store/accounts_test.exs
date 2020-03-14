@@ -2,10 +2,26 @@ defmodule ArtStore.AccountsTest do
   use ArtStore.DataCase
 
   alias ArtStore.Accounts
+  alias ArtStore.Accounts.User
+
+  def unload_relations(obj, to_remove \\ nil) do
+    assocs =
+      if to_remove == nil,
+        do: obj.__struct__.__schema__(:associations),
+      else: Enum.filter(obj.__struct__.__schema__(:associations), &(&1 in to_remove))
+
+      Enum.reduce(assocs, obj, fn assoc, obj ->
+        assoc_meta = obj.__struct__.__schema__(:association, assoc)
+
+        Map.put(obj, assoc, %Ecto.Association.NotLoaded{
+          __field__: assoc,
+          __owner__: assoc_meta.owner,
+          __cardinality__: assoc_meta.cardinality
+        })
+      end)
+  end
 
   describe "users" do
-    alias ArtStore.Accounts.User
-
     @valid_attrs %{username: "some  username", verified: true, name: "some name"}
     @update_attrs %{username: "some updated  username", verified: false, name: "some updated name"}
     @invalid_attrs %{username: nil, verified: nil, name: nil}
@@ -69,48 +85,70 @@ defmodule ArtStore.AccountsTest do
   describe "credentials" do
     alias ArtStore.Accounts.Credential
 
-    @valid_attrs %{email: "some email", password_hash: "some password_hash"}
-    @update_attrs %{email: "some updated email", password_hash: "some updated password_hash"}
+    @valid_user_attrs %{username: "some  username", verified: true, name: "some name"}
+    @valid_attrs %{email: "someemail@gueloremanuel.com", password: "some password"}
+    @update_attrs %{email: "someupdatedemail@gueloremanuel.com", password: "some updated password"}
     @invalid_attrs %{email: nil, password_hash: nil}
 
     def credential_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        @valid_user_attrs
+        |> Accounts.create_user()
+
       {:ok, credential} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Accounts.create_credential()
+        |> Accounts.create_credential(user)
 
-      credential
+      Map.put(credential, :password, nil)
     end
 
     test "list_credentials/0 returns all credentials" do
-      credential = credential_fixture()
+      credential =
+        credential_fixture()
+        |> unload_relations()
+
       assert Accounts.list_credentials() == [credential]
     end
 
     test "get_credential!/1 returns the credential with given id" do
-      credential = credential_fixture()
+      credential =
+        credential_fixture()
+        |> unload_relations()
+
       assert Accounts.get_credential!(credential.id) == credential
     end
 
     test "create_credential/1 with valid data creates a credential" do
-      assert {:ok, %Credential{} = credential} = Accounts.create_credential(@valid_attrs)
-      assert credential.email == "some email"
-      assert credential.password_hash == "some password_hash"
+      {:ok, user} =
+        @valid_user_attrs
+        |> Accounts.create_user()
+
+      assert {:ok, %Credential{} = credential} = Accounts.create_credential(@valid_attrs, user)
+      assert credential.email == "someemail@gueloremanuel.com"
+      assert Argon2.verify_pass("some password", credential.password_hash) == true
     end
 
     test "create_credential/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_credential(@invalid_attrs)
+      {:ok, user} =
+        @valid_user_attrs
+        |> Accounts.create_user()
+
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_credential(@invalid_attrs, user)
     end
 
     test "update_credential/2 with valid data updates the credential" do
       credential = credential_fixture()
       assert {:ok, %Credential{} = credential} = Accounts.update_credential(credential, @update_attrs)
-      assert credential.email == "some updated email"
-      assert credential.password_hash == "some updated password_hash"
+      assert credential.email == "someupdatedemail@gueloremanuel.com"
+      assert Argon2.verify_pass("some updated password", credential.password_hash) == true
     end
 
     test "update_credential/2 with invalid data returns error changeset" do
-      credential = credential_fixture()
+      credential =
+        credential_fixture()
+        |> unload_relations()
+
       assert {:error, %Ecto.Changeset{}} = Accounts.update_credential(credential, @invalid_attrs)
       assert credential == Accounts.get_credential!(credential.id)
     end

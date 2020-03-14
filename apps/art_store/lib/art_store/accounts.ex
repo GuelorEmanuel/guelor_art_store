@@ -138,16 +138,17 @@ defmodule ArtStore.Accounts do
 
   ## Examples
 
-      iex> create_credential(%{field: value})
+      iex> create_credential(%{field: value}, %User{})
       {:ok, %Credential{}}
 
-      iex> create_credential(%{field: bad_value})
+      iex> create_credential(%{field: bad_value}, %User{})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_credential(attrs \\ %{}) do
+  def create_credential(attrs \\ %{}, user) do
     %Credential{}
     |> Credential.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
