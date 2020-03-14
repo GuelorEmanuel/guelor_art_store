@@ -6,7 +6,7 @@ defmodule ArtStore.Accounts do
   import Ecto.Query, warn: false
   alias ArtStore.Repo
 
-  alias ArtStore.Accounts.User
+  alias ArtStore.Accounts.{User, Credential}
 
   @doc """
   Returns the list of users.
@@ -52,6 +52,7 @@ defmodule ArtStore.Accounts do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.insert()
   end
 
@@ -70,6 +71,7 @@ defmodule ArtStore.Accounts do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.update()
   end
 

@@ -8,13 +8,13 @@
   </li>
 
   <li>
-    <strong> username:</strong>
-    <%= @user. username %>
+    <strong>username:</strong>
+    <%= @user.username %>
   </li>
 
   <li>
-    <strong> verified:</strong>
-    <%= @user. verified %>
+    <strong>verified:</strong>
+    <%= @user.verified %>
   </li>
 
 </ul>

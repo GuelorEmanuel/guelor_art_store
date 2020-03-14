@@ -9,13 +9,13 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
-  <%= label f, :" username" %>
-  <%= text_input f, :" username" %>
-  <%= error_tag f, :" username" %>
+  <%= label f, :username %>
+  <%= text_input f, :username %>
+  <%= error_tag f, :username %>
 
-  <%= label f, :" verified" %>
-  <%= checkbox f, :" verified" %>
-  <%= error_tag f, :" verified" %>
+  <%= label f, :verified %>
+  <%= checkbox f, :verified %>
+  <%= error_tag f, :verified %>
 
   <div>
     <%= submit "Save" %>

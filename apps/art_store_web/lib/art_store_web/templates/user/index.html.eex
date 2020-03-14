@@ -4,8 +4,8 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th> username</th>
-      <th> verified</th>
+      <th>username</th>
+      <th>verified</th>
 
       <th></th>
     </tr>
@@ -14,8 +14,8 @@
 <%= for user <- @users do %>
     <tr>
       <td><%= user.name %></td>
-      <td><%= user. username %></td>
-      <td><%= user. verified %></td>
+      <td><%= user.username %></td>
+      <td><%= user.verified %></td>
 
       <td>
         <span><%= link "Show", to: Routes.user_path(@conn, :show, user) %></span>
