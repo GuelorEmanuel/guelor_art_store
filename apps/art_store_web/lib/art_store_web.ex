@@ -23,6 +23,7 @@ defmodule ArtStoreWeb do
       import Plug.Conn
       import ArtStoreWeb.Gettext
       alias ArtStoreWeb.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Controller
     end
   end
 
@@ -41,6 +42,7 @@ defmodule ArtStoreWeb do
       import ArtStoreWeb.ErrorHelpers
       import ArtStoreWeb.Gettext
       alias ArtStoreWeb.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Helpers
     end
   end
 
@@ -49,6 +51,7 @@ defmodule ArtStoreWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 

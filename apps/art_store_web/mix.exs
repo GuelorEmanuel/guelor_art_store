@@ -45,7 +45,12 @@ defmodule ArtStoreWeb.MixProject do
       {:gettext, "~> 0.11"},
       {:art_store, in_umbrella: true},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:number, "~> 1.0.1"},
+      {:stripity_stripe, "~> 2.7.2"},
+      {:cloudex, "~> 1.4"},
+      {:phoenix_gon, "~> 0.4.0"},
+      {:phoenix_live_view, "~> 0.9.0"}
     ]
   end
 

@@ -14,5 +14,10 @@ config :art_store_web, ArtStoreWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :cloudex,
+  api_key: "915756558412773",
+  secret: "VyH8QnQKXs6sXdJDSuapJ1HbFi4",
+  cloud_name: "gueloremanuel-com"
+
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -7,6 +7,7 @@ defmodule ArtStore.Products do
   alias ArtStore.Repo
 
   alias ArtStore.Products.Product
+  alias ArtStore.Purchases.Customer
 
   @doc """
   Returns the list of products.
@@ -52,6 +53,7 @@ defmodule ArtStore.Products do
   def create_product(attrs \\ %{}) do
     %Product{}
     |> Product.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:customer, with: &Customer.changeset/2)
     |> Repo.insert()
   end
 

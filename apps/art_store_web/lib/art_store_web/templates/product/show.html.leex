@@ -1,0 +1,62 @@
+<div class="container" id="show-product">
+   <div id="productNav"><%= link "← Back to Store", to: Routes.product_path(@socket, :index) %></div>
+   <div id="productSummary" class="clear">
+      <div id="productGallery">
+         <div class="intrinsic">
+            <div class="wrapper">
+               <div id="productSlideshow" class="sqs-gallery-design-stacked">
+                  <div class="slide sqs-gallery-design-stacked-slide sqs-active-slide loaded">
+                     <img data-src="<%= @product.url %>" data-image="<%= @product.url %>" data-image-dimensions="2500x1667" data-image-focal-point="0.5,0.5" style="font-size: 0px; left: -77.2037px; top: 0px; width: 463.407px; height: 309px; position: relative;" class="loaded" data-image-resolution="2500w" src="<%= @product.url %>" data-parent-ratio="1.0">
+                     <div class=""></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="productDetails">
+        <div>
+          <h1 class="product-title"><%= @product.name %></h1>
+          <div class="product-price"> <span class="sqs-money-native"><%= cents_to_dollar(@product.price) %></span> </div>
+          <div class="product-excerpt" data-content-field="excerpt">
+              <p class="" style="white-space:pre-wrap;"><%= @product.detail %></p>
+          </div>
+          <%= if @product.quantity > 0 do %>
+            <div class="product-quantity-input">
+               <div class="quantity-label">Quantity:</div>
+                  <input phx-window-keyup="set_quantity" phx-click="set_quantity" name="input" 
+                        phx-value-myvar1="<%= @product.name %>" 
+                        phx-value-myvar2="<%= @product.detail %>"
+                        phx-value-myvar3="<%= @product.url %>"
+                        phx-value-myvar4="<%= @product.price %>"
+                        phx-value-myvar5="<%= @product.id %>"
+                        size="4" max="<%= @product.quantity %>" 
+                        min="1" 
+                        value="<%= @quantity %>" type="number" step="1"> 
+            </div>
+         <% end %>
+         <button id="checkout-button" data-checkout_session_id="<%= @checkout_session_id %>">Purchase</button>
+          <%= if @product.quantity == 0 do %>
+            <div class="product-mark sold-out">sold out</div>
+          <% end %>
+        </div>
+        <script> 
+         let stripe = Stripe("<%= @stripe_pk %>");
+         var checkoutButton = document.querySelector('#checkout-button');
+         checkoutButton.addEventListener("click", e => {
+            stripe.redirectToCheckout({
+               // Make the id field from the Checkout Session creation API response
+               // available to this file, so you can provide it as parameter here
+               // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+               sessionId: checkoutButton.dataset.checkout_session_id
+            }).then(function (result) {
+               // If `redirectToCheckout` fails due to a browser or network
+               // error, display the localized error message to your customer
+               // using `result.error.message`.
+            });
+         })
+        </script>
+      </div>
+   </div>
+</div>
+
+

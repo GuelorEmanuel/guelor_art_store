@@ -6,8 +6,8 @@ defmodule ArtStore.ProductsTest do
   describe "products" do
     alias ArtStore.Products.Product
 
-    @valid_attrs %{detail: "some  detail", price: 42, quantity: 42, name: "some name"}
-    @update_attrs %{detail: "some updated  detail", price: 43, quantity: 43, name: "some updated name"}
+    @valid_attrs %{detail: "some  detail", price: 42, quantity: 42, name: "some name", url: "some url"}
+    @update_attrs %{detail: "some updated  detail", price: 43, quantity: 43, name: "some updated name", url: "some updated url"}
     @invalid_attrs %{detail: nil, price: nil, quantity: nil, name: nil}
 
     def product_fixture(attrs \\ %{}) do

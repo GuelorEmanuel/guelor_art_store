@@ -3,6 +3,10 @@ defmodule ArtStoreWeb.ProductController do
 
   alias ArtStore.Products
   alias ArtStore.Products.Product
+  alias Phoenix.LiveView
+  alias ArtStoreWeb.ProductLive.Index
+
+  require Logger
 
   def index(conn, _params) do
     products = Products.list_products()
@@ -14,21 +18,47 @@ defmodule ArtStoreWeb.ProductController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"product" => product_params}) do
-    case Products.create_product(product_params) do
-      {:ok, product} ->
-        conn
-        |> put_flash(:info, "Product created successfully.")
-        |> redirect(to: Routes.product_path(conn, :show, product))
+  defp upload_image_to_cloudinary(path) do
+    Logger.warn("path: #{path}")
+    case Cloudex.upload(path) do
+      {:ok, uploaded_image} -> {:ok, uploaded_image.secure_url}
 
+      {_, error} -> {:cloudinary_error, error}
+    end
+  end
+
+  defp get_url(params) do
+    case  Map.has_key?(params, "url") do
+      true -> {:ok, params["url"].path}
+
+      _ -> {:url_error, "Key error"}
+    end
+  end
+
+  def create(conn, %{"product" => product_params}) do
+    with {:ok, path} <- get_url(product_params),
+         {:ok, url} <- upload_image_to_cloudinary("#{path}"),
+         {:ok, product} <- Products.create_product(Map.put(product_params, "url", url)) do
+           conn
+           |> put_flash(:info, "Product created successfully.")
+           |> redirect(to: Routes.product_path(conn, :show, product))
+    else
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
+      {:cloudinary_error, error_msg} ->
+        conn
+        |> put_flash(:info, "#{error_msg}")
+        |> render("new.html", changeset: Products.change_product(%Product{}))
+      {:url_error, _} ->
+        conn
+        |> put_flash(:info, "Please upload image")
+        |> render("new.html", changeset: Products.change_product(%Product{}))
     end
   end
 
   def show(conn, %{"id" => id}) do
     product = Products.get_product!(id)
-    render(conn, "show.html", product: product)
+    LiveView.Controller.live_render(conn, Index, session: %{"product" => product})
   end
 
   def edit(conn, %{"id" => id}) do

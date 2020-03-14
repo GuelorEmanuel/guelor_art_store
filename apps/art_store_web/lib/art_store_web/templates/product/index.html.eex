@@ -1,13 +1,12 @@
-<h1>Listing Products</h1>
-<div class="outer">
+<div class="outer" id="listing-products">
   <%= for product <- @products do %>
     <div class="container cf">
-      <a href="<%= Routes.product_path(@conn, :show, product) %>" class="product hentry author-iddris-sandu post-type-store-item article-index-1 featured clear" id="thumb-rastaclat-x-iddris-sandu-limited-edition-grad-clat" data-item-id="5dfd31bf2b533014b7b344b0">
+      <a href="<%= Routes.product_path(@conn, :show, product) %>" class="product featured clear">
         <div>
-            <div class="product-image sqs-pinterest-image">
+            <div class="product-image">
               <div class="intrinsic">
                   <div style="overflow: hidden;">
-                    <img data-src="https://images.squarespace-cdn.com/content/v1/5a76ae3251a584e6151d0f99/1576874720720-WG3MJR37TGJBRVRUBHQY/ke17ZwdGBToddI8pDm48kLkXF2pIyv_F2eUT9F60jBl7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0iyqMbMesKd95J-X4EagrgU9L3Sa3U8cogeb0tjXbfawd0urKshkc5MgdBeJmALQKw/Iddris1242Iddris+Final+14.jpg" data-image="https://images.squarespace-cdn.com/content/v1/5a76ae3251a584e6151d0f99/1576874720720-WG3MJR37TGJBRVRUBHQY/ke17ZwdGBToddI8pDm48kLkXF2pIyv_F2eUT9F60jBl7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0iyqMbMesKd95J-X4EagrgU9L3Sa3U8cogeb0tjXbfawd0urKshkc5MgdBeJmALQKw/Iddris1242Iddris+Final+14.jpg" data-image-dimensions="2500x1667" data-image-focal-point="0.5,0.5" data-load="false" alt="Iddris1242Iddris Final 14.jpg" style="font-size: 0px; left: -71.707px; top: 0px; width: 430.414px; height: 287px; position: relative;" class="image loaded" data-image-resolution="2500w" src="https://images.squarespace-cdn.com/content/v1/5a76ae3251a584e6151d0f99/1576874720720-WG3MJR37TGJBRVRUBHQY/ke17ZwdGBToddI8pDm48kLkXF2pIyv_F2eUT9F60jBl7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0iyqMbMesKd95J-X4EagrgU9L3Sa3U8cogeb0tjXbfawd0urKshkc5MgdBeJmALQKw/Iddris1242Iddris+Final+14.jpg?format=2500w" data-parent-ratio="1.0">
+                    <img data-src="<%= product.url %>" data-image-dimensions="2500x1667" data-image-focal-point="0.5,0.5" data-load="false" style="font-size: 0px; left: -71.707px; top: 0px; width: 430.414px; height: 287px; position: relative;" class="image loaded" data-image-resolution="2500w" src="<%= product.url %>" data-parent-ratio="1.0">
                   </div>
               </div>
             </div>
@@ -16,7 +15,7 @@
                   <div class="product-title"><%= product.name %></div>
                   <div class="product-detail"><%= product.detail %></div>
                   <div class="product-price">
-                    <span class="sqs-money-native"><%= product.price %></span>
+                    <span class="sqs-money-native"><%= cents_to_dollar(product.price) %></span>
                   </div>
               </div>
             </div>
@@ -35,6 +34,7 @@
       <th> detail</th>
       <th> price</th>
       <th> quantity</th>
+       <th> url</th>
 
       <th></th>
     </tr>
@@ -46,6 +46,7 @@
       <td><%= product.detail %></td>
       <td><%= product.price %></td>
       <td><%= product.quantity %></td>
+       <td><%= product.url %></td>
 
       <td>
         <span><%= link "Show", to: Routes.product_path(@conn, :show, product) %></span>

@@ -3,19 +3,25 @@ defmodule ArtStoreWeb.ProductControllerTest do
 
   alias ArtStore.Products
 
-  @create_attrs %{detail: "some  detail", price: 42, quantity: 42, name: "some name"}
+  @create_attrs %{detail: "some  detail", price: 42, quantity: 42, name: "some name",
+                  url: %Plug.Upload{path: "test/fixtures/pr.jpg", filename: "pr.jpg"}}
   @update_attrs %{detail: "some updated  detail", price: 43, quantity: 43, name: "some updated name"}
-  @invalid_attrs %{detail: nil, price: nil, quantity: nil, name: nil}
+  @invalid_attrs %{detail: nil, price: nil, quantity: nil, name: nil,
+                   url: %Plug.Upload{path: "test/fixtures/pr.jpg", filename: "pr.jpg"}}
 
   def fixture(:product) do
-    {:ok, product} = Products.create_product(@create_attrs)
+    {:ok, product} =
+      @create_attrs
+      |> Map.put(:url, "test/fixtures/pr.jpg")
+      |> Products.create_product()
+
     product
   end
 
   describe "index" do
     test "lists all products", %{conn: conn} do
       conn = get(conn, Routes.product_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Products"
+      assert html_response(conn, 200) =~ "listing-products"
     end
   end
 
@@ -28,13 +34,13 @@ defmodule ArtStoreWeb.ProductControllerTest do
 
   describe "create product" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.product_path(conn, :create), product: @create_attrs)
+      conn = post(conn, Routes.product_path(conn, :create), %{"product" => @create_attrs})
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == Routes.product_path(conn, :show, id)
 
       conn = get(conn, Routes.product_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Product"
+      assert html_response(conn, 200) =~ "show-product"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

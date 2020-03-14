@@ -3,10 +3,12 @@ defmodule ArtStore.Repo.Migrations.CreateProducts do
 
   def change do
     create table(:products) do
-      add :name, :string
-      add :detail, :string
-      add :price, :integer
-      add :quantity, :integer
+      add :name, :string, null: false
+      add :detail, :string, null: false
+      add :price, :bigint, null: false
+      add :quantity, :integer, default: 1, null: false
+      add :url, :text, null: false
+      add :available, :boolean, default: true, null: false
 
       timestamps()
     end

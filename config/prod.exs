@@ -10,8 +10,12 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :art_store_web, ArtStoreWeb.Endpoint,
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  force_ssl: [rewrite_on: [:x_forwarded_proto]]
+  url: [host: "gueloremanuel.com", port: 80],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  cancel_url: "https://gueloremanuel/",
+  success_url: "https://gueloremanuel/success?session_id=",
+  stripe_pk: "pk_live_tlDLhGwO5r7Y9COdJsuR0pGo00olaxSNaD"
 
 # ## SSL Support
 #

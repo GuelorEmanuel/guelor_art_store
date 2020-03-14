@@ -241,6 +241,7 @@
     position: absolute;
     top: 0px;
     right: 101px;
+    text-transform: uppercase;
   }
 
   .image {
@@ -253,14 +254,34 @@
     opacity: 0.7;
   }
 
+  .clear {
+    display: flex;
+  }
+
+  .sold-out {
+    padding: 3px;
+  }
+
+  #productNav {
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    font-family: Lato;
+  }
 @media screen and (max-width: 700px) {
   .cf {
-    display: initial;
+    display: inline-block;
    }
  
    .outer {
-     display: inline-flex;
-     margin: auto;
+     display: inline-block;
+   }
+   .clear {
+    display: flex;
+    flex-direction: column;
+  }
+
+   #productGallery {
+    flex-direction: column;
    }
 }
  

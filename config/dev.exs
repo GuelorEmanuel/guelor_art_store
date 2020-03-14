@@ -28,7 +28,17 @@ config :art_store_web, ArtStoreWeb.Endpoint,
       "--watch-stdin",
       cd: Path.expand("../apps/art_store_web/assets", __DIR__)
     ]
-  ]
+  ],
+  cancel_url: "http://localhost:4000/",
+  success_url: "http://localhost:400/success?session_id=",
+  stripe_pk: "pk_test_dG6vpZDNXycfGGBUBgxQ49Ko00fCGjSoCx"
+
+config :stripity_stripe, api_key: "sk_test_NIwu1PjrpJGuaAKKw2s58PDX00Rg9WM2Y8"
+
+config :cloudex,
+    api_key: "915756558412773",
+    secret: "VyH8QnQKXs6sXdJDSuapJ1HbFi4",
+    cloud_name: "gueloremanuel-com"
 
 # ## SSL Support
 #

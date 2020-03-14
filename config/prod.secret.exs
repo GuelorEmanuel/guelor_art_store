@@ -30,6 +30,13 @@ config :art_store_web, ArtStoreWeb.Endpoint,
   ],
   secret_key_base: secret_key_base
 
+config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET")
+
+config :cloudex,
+    api_key: System.get_env("CLOUDEX_API_KEY"),
+    secret: System.get_env("CLOUDEX_SECRET"),
+    cloud_name: System.get_env("CLOUDEX_CLOUD_NAME")
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
