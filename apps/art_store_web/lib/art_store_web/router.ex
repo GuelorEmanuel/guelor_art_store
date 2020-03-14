@@ -14,15 +14,16 @@ defmodule ArtStoreWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
   end
-  
+
   scope "/", ArtStoreWeb do
     pipe_through :browser
-
+    get "/", PageController, :index
     get "/art", PageController, :index
     get "/about", AboutController, :index
-    resources "/", ProductController
+    get "/receipt", PurchaseController, :receipt
+    resources "/store", ProductController
     resources "/purchases", PurchaseController, only: [:create]
-    get "/receipt", PurchaseController, :receipt 
+    resources "/users", UserController
   end
 
   # Other scopes may use custom stacks.
