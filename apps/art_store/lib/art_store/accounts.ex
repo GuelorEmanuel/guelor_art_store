@@ -333,35 +333,19 @@ defmodule ArtStore.Accounts do
 
   ## Examples
 
-      iex> create_user_role(%{field: value})
+      iex> create_user_role(%{field: value}, %User{}, %Role{})
       {:ok, %UserRole{}}
 
-      iex> create_user_role(%{field: bad_value})
+      iex> create_user_role(%{field: bad_value}, %User{}, %Role{})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user_role(attrs \\ %{}) do
+  def create_user_role(attrs \\ %{}, user, role) do
     %UserRole{}
     |> UserRole.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Ecto.Changeset.put_assoc(:role, role)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a user_role.
-
-  ## Examples
-
-      iex> update_user_role(user_role, %{field: new_value})
-      {:ok, %UserRole{}}
-
-      iex> update_user_role(user_role, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_user_role(%UserRole{} = user_role, attrs) do
-    user_role
-    |> UserRole.changeset(attrs)
-    |> Repo.update()
   end
 
   @doc """

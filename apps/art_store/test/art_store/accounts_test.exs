@@ -4,6 +4,8 @@ defmodule ArtStore.AccountsTest do
   alias ArtStore.Accounts
   alias ArtStore.Accounts.User
 
+  @valid_user_attrs %{username: "some  username", verified: true, name: "some name"}
+
   def unload_relations(obj, to_remove \\ nil) do
     assocs =
       if to_remove == nil,
@@ -85,7 +87,6 @@ defmodule ArtStore.AccountsTest do
   describe "credentials" do
     alias ArtStore.Accounts.Credential
 
-    @valid_user_attrs %{username: "some  username", verified: true, name: "some name"}
     @valid_attrs %{email: "someemail@gueloremanuel.com", password: "some password"}
     @update_attrs %{email: "someupdatedemail@gueloremanuel.com", password: "some updated password"}
     @invalid_attrs %{email: nil, password_hash: nil}
@@ -230,43 +231,51 @@ defmodule ArtStore.AccountsTest do
     @valid_attrs %{}
     @update_attrs %{}
     @invalid_attrs %{}
+    @valid_role_attrs %{role_name: "some role_name"}
 
     def user_role_fixture(attrs \\ %{}) do
+      {:ok, user} =
+        @valid_user_attrs
+        |> Accounts.create_user()
+
+      {:ok, role} =
+        @valid_role_attrs
+        |> Accounts.create_role()
+
       {:ok, user_role} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Accounts.create_user_role()
+        |> Accounts.create_user_role(user, role)
 
       user_role
     end
 
     test "list_userroles/0 returns all userroles" do
-      user_role = user_role_fixture()
+      user_role =
+        user_role_fixture()
+        |> unload_relations()
+
       assert Accounts.list_userroles() == [user_role]
     end
 
     test "get_user_role!/1 returns the user_role with given id" do
-      user_role = user_role_fixture()
+      user_role =
+        user_role_fixture()
+        |> unload_relations()
+
       assert Accounts.get_user_role!(user_role.id) == user_role
     end
 
     test "create_user_role/1 with valid data creates a user_role" do
-      assert {:ok, %UserRole{} = user_role} = Accounts.create_user_role(@valid_attrs)
-    end
+      {:ok, user} =
+        @valid_user_attrs
+      |> Accounts.create_user()
 
-    test "create_user_role/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_user_role(@invalid_attrs)
-    end
+      {:ok, role} =
+        @valid_role_attrs
+        |> Accounts.create_role()
 
-    test "update_user_role/2 with valid data updates the user_role" do
-      user_role = user_role_fixture()
-      assert {:ok, %UserRole{} = user_role} = Accounts.update_user_role(user_role, @update_attrs)
-    end
-
-    test "update_user_role/2 with invalid data returns error changeset" do
-      user_role = user_role_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_user_role(user_role, @invalid_attrs)
-      assert user_role == Accounts.get_user_role!(user_role.id)
+      assert {:ok, %UserRole{} = user_role} = Accounts.create_user_role(@valid_attrs, user, role)
     end
 
     test "delete_user_role/1 deletes the user_role" do
