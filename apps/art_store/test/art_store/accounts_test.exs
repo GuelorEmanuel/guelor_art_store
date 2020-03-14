@@ -164,4 +164,120 @@ defmodule ArtStore.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_credential(credential)
     end
   end
+
+  describe "roles" do
+    alias ArtStore.Accounts.Role
+
+    @valid_attrs %{role_name: "some role_name"}
+    @update_attrs %{role_name: "some updated role_name"}
+    @invalid_attrs %{role_name: nil}
+
+    def role_fixture(attrs \\ %{}) do
+      {:ok, role} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_role()
+
+      role
+    end
+
+    test "list_roles/0 returns all roles" do
+      role = role_fixture()
+      assert Accounts.list_roles() == [role]
+    end
+
+    test "get_role!/1 returns the role with given id" do
+      role = role_fixture()
+      assert Accounts.get_role!(role.id) == role
+    end
+
+    test "create_role/1 with valid data creates a role" do
+      assert {:ok, %Role{} = role} = Accounts.create_role(@valid_attrs)
+      assert role.role_name == "some role_name"
+    end
+
+    test "create_role/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_role(@invalid_attrs)
+    end
+
+    test "update_role/2 with valid data updates the role" do
+      role = role_fixture()
+      assert {:ok, %Role{} = role} = Accounts.update_role(role, @update_attrs)
+      assert role.role_name == "some updated role_name"
+    end
+
+    test "update_role/2 with invalid data returns error changeset" do
+      role = role_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_role(role, @invalid_attrs)
+      assert role == Accounts.get_role!(role.id)
+    end
+
+    test "delete_role/1 deletes the role" do
+      role = role_fixture()
+      assert {:ok, %Role{}} = Accounts.delete_role(role)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_role!(role.id) end
+    end
+
+    test "change_role/1 returns a role changeset" do
+      role = role_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_role(role)
+    end
+  end
+
+  describe "userroles" do
+    alias ArtStore.Accounts.UserRole
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def user_role_fixture(attrs \\ %{}) do
+      {:ok, user_role} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_user_role()
+
+      user_role
+    end
+
+    test "list_userroles/0 returns all userroles" do
+      user_role = user_role_fixture()
+      assert Accounts.list_userroles() == [user_role]
+    end
+
+    test "get_user_role!/1 returns the user_role with given id" do
+      user_role = user_role_fixture()
+      assert Accounts.get_user_role!(user_role.id) == user_role
+    end
+
+    test "create_user_role/1 with valid data creates a user_role" do
+      assert {:ok, %UserRole{} = user_role} = Accounts.create_user_role(@valid_attrs)
+    end
+
+    test "create_user_role/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_user_role(@invalid_attrs)
+    end
+
+    test "update_user_role/2 with valid data updates the user_role" do
+      user_role = user_role_fixture()
+      assert {:ok, %UserRole{} = user_role} = Accounts.update_user_role(user_role, @update_attrs)
+    end
+
+    test "update_user_role/2 with invalid data returns error changeset" do
+      user_role = user_role_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_user_role(user_role, @invalid_attrs)
+      assert user_role == Accounts.get_user_role!(user_role.id)
+    end
+
+    test "delete_user_role/1 deletes the user_role" do
+      user_role = user_role_fixture()
+      assert {:ok, %UserRole{}} = Accounts.delete_user_role(user_role)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user_role!(user_role.id) end
+    end
+
+    test "change_user_role/1 returns a user_role changeset" do
+      user_role = user_role_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_user_role(user_role)
+    end
+  end
 end
