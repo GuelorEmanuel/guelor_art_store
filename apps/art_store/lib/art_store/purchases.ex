@@ -7,10 +7,11 @@ defmodule ArtStore.Purchases do
   alias ArtStore.Repo
 
   alias ArtStore.Purchases.Customer
+  alias ArtStore.Purchases.Address
 
-  
+
   def charge_customer(customer, amount) do
-    source = 
+    source =
       customer.stripe_customer_id
       |> get_stripe_customer()
       |> get_in([:default_source])
@@ -26,14 +27,14 @@ defmodule ArtStore.Purchases do
 
   def get_stripe_customer(customer_id) do
     case Stripe.Customers.get(customer_id) do
-      {:ok, customer} -> 
+      {:ok, customer} ->
         customer
-      {:error, _} -> 
+      {:error, _} ->
         nil
     end
   end
-  ## Passing in the source when we create a customer will create a default payment 
-  ## source in Stripe with the card they entered. This gives us some flexibility, 
+  ## Passing in the source when we create a customer will create a default payment
+  ## source in Stripe with the card they entered. This gives us some flexibility,
   ## so if we wanted to wait until the order ships to charge the card we could do that.
   def create_stripe_customer(email, token) do
     case Stripe.Customer.create(email: email, source: token) do
@@ -138,7 +139,6 @@ defmodule ArtStore.Purchases do
     Customer.changeset(customer, %{})
   end
 
-  alias ArtStore.Purchases.Address
 
   @doc """
   Returns the list of addresses.
