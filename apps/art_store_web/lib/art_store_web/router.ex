@@ -17,13 +17,32 @@ defmodule ArtStoreWeb.Router do
 
   scope "/", ArtStoreWeb do
     pipe_through :browser
-    get "/", PageController, :index
+
+    get "/", ProductController, :index
     get "/art", PageController, :index
     get "/about", AboutController, :index
     get "/receipt", PurchaseController, :receipt
+    resources "/store", ProductController, only: [:index, :show]
+  end
+
+  pipeline :chatter_layout do
+    plug :put_layout, {ArtStoreWeb.LayoutView, :chatter}
+  end
+
+  scope "/chatter", ArtStoreWeb do
+    pipe_through [:browser, :chatter_layout]
+
+    get "/", SessionController, :index, singleton: true
+    # get "/login", SessionController, :login_page, singleton: true
+    # get "/signup", SessionController, :signup, singleton: true
+  end
+
+  scope "/admin", ArtStoreWeb do
+    pipe_through :browser
+
     resources "/store", ProductController
-    resources "/purchases", PurchaseController, only: [:create]
     resources "/users", UserController
+    resources "/purchases", PurchaseController, only: [:create]
   end
 
   # Other scopes may use custom stacks.

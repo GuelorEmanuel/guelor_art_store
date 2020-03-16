@@ -38,12 +38,18 @@ defmodule ArtStore.AccountsTest do
     end
 
     test "list_users/0 returns all users" do
-      user = user_fixture()
+      user =
+        user_fixture()
+        |> Map.put(:credential, nil)
+
       assert Accounts.list_users() == [user]
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
+      user =
+        user_fixture()
+        |> Map.put(:credential, nil)
+
       assert Accounts.get_user!(user.id) == user
     end
 
@@ -67,7 +73,10 @@ defmodule ArtStore.AccountsTest do
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
+      user =
+       user_fixture()
+       |> Map.put(:credential, nil)
+
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       assert user == Accounts.get_user!(user.id)
     end

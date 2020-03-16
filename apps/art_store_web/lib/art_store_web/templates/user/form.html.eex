@@ -17,6 +17,20 @@
   <%= checkbox f, :verified %>
   <%= error_tag f, :verified %>
 
+  <div class="form-group">
+    <%= inputs_for f, :credential, fn cf -> %>
+      <%= label cf, :email %>
+      <%= text_input cf, :email %>
+      <%= error_tag cf, :email %>
+
+      <%= label cf, :password %>
+      <%= password_input cf, :password %>
+      <%= error_tag cf, :password %>
+
+
+    <% end %>
+  </div>
+
   <div>
     <%= submit "Save" %>
   </div>

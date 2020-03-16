@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Email</th>
       <th>username</th>
       <th>verified</th>
 
@@ -14,6 +15,7 @@
 <%= for user <- @users do %>
     <tr>
       <td><%= user.name %></td>
+      <td><%= user.credential.email %></td>
       <td><%= user.username %></td>
       <td><%= user.verified %></td>
 

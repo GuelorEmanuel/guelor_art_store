@@ -29,8 +29,8 @@ config :art_store_web, ArtStoreWeb.Endpoint,
       cd: Path.expand("../apps/art_store_web/assets", __DIR__)
     ]
   ],
-  cancel_url: "http://localhost:4000/",
-  success_url: "http://localhost:400/success?session_id=",
+  cancel_url: "http://localhost:4000/store/",
+  success_url: "http://localhost:400/store/success?session_id=",
   stripe_pk: "pk_test_dG6vpZDNXycfGGBUBgxQ49Ko00fCGjSoCx"
 
 config :stripity_stripe, api_key: "sk_test_NIwu1PjrpJGuaAKKw2s58PDX00Rg9WM2Y8"

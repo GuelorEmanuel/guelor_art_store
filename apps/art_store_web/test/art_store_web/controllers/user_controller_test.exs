@@ -4,6 +4,7 @@ defmodule ArtStoreWeb.UserControllerTest do
   alias ArtStore.Accounts
 
   @create_attrs %{username: "some  username", verified: true, name: "some name"}
+  @valid_credential_attrs %{email: "someemail@gueloremanuel.com", password: "some password"}
   @update_attrs %{username: "some updated  username", verified: false, name: "some updated name"}
   @invalid_attrs %{username: nil, verified: nil, name: nil}
 
@@ -28,7 +29,10 @@ defmodule ArtStoreWeb.UserControllerTest do
 
   describe "create user" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
+      params =
+        @create_attrs
+        |> Map.put(:credential, @valid_credential_attrs)
+      conn = post(conn, Routes.user_path(conn, :create), user: params)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == Routes.user_path(conn, :show, id)
@@ -53,7 +57,7 @@ defmodule ArtStoreWeb.UserControllerTest do
   end
 
   describe "update user" do
-    setup [:create_user]
+    setup [:create_user_and_credential]
 
     test "redirects when data is valid", %{conn: conn, user: user} do
       conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
@@ -83,6 +87,16 @@ defmodule ArtStoreWeb.UserControllerTest do
 
   defp create_user(_) do
     user = fixture(:user)
+    {:ok, user: user}
+  end
+
+  defp create_user_and_credential(_) do
+    user = fixture(:user)
+
+    {:ok, _credential} =
+      @valid_credential_attrs
+      |> Accounts.create_credential(user)
+
     {:ok, user: user}
   end
 end

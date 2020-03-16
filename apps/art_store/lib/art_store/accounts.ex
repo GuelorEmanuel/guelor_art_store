@@ -18,7 +18,9 @@ defmodule ArtStore.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    User
+    |> Repo.all()
+    |> Repo.preload(:credential)
   end
 
   @doc """
@@ -35,7 +37,11 @@ defmodule ArtStore.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> Repo.get!(id)
+    |> Repo.preload(:credential)
+  end
 
   @doc """
   Creates a user.
@@ -375,5 +381,29 @@ defmodule ArtStore.Accounts do
   """
   def change_user_role(%UserRole{} = user_role) do
     UserRole.changeset(user_role, %{})
+  end
+
+  @doc """
+  Autheticate user by email.
+
+  ## Examples
+
+  """
+  def authenticate_by_email_password(email) do
+    query =
+      from u in User,
+        inner_join: c in assoc(u, :credential),
+        where: c.email == ^email
+
+    query_result =
+      query
+      |> Repo.one()
+      |> Repo.preload(:credential)
+
+    case query_result do
+      %User{} = user ->
+        {:ok, user}
+      nil -> {:error, :unauthorized}
+    end
   end
 end
