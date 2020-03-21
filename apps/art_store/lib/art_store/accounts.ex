@@ -44,6 +44,26 @@ defmodule ArtStore.Accounts do
   end
 
   @doc """
+  Gets a single user.
+
+  Return `nil` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user!(123)
+      %User{}
+
+      iex> get_user!(456)
+      ** nil
+
+  """
+  def get_user(id) do
+    User
+    |> Repo.get(id)
+    |> Repo.preload(:credential)
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples

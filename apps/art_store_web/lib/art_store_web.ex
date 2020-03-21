@@ -40,6 +40,7 @@ defmodule ArtStoreWeb do
       use Phoenix.HTML
 
       import ArtStoreWeb.ErrorHelpers
+      import ArtStoreWeb.InputHelpers
       import ArtStoreWeb.Gettext
       alias ArtStoreWeb.Router.Helpers, as: Routes
       import Phoenix.LiveView.Helpers

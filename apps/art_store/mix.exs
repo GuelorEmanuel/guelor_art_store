@@ -23,7 +23,7 @@ defmodule ArtStore.MixProject do
   def application do
     [
       mod: {ArtStore.Application, []},
-      extra_applications: [:logger, :runtime_tools, :ssl]
+      extra_applications: [:logger, :runtime_tools, :con_cache, :ssl]
     ]
   end
 
@@ -38,7 +38,9 @@ defmodule ArtStore.MixProject do
     [
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:con_cache, "~> 0.14.0"},
+      {:bamboo, "~> 1.4"}
     ]
   end
 

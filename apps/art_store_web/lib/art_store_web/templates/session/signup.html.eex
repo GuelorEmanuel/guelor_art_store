@@ -1,0 +1,64 @@
+
+
+<div class="ui inverted vertical masthead center aligned segment">
+
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a class="toc item">
+        <i class="sidebar icon"></i>
+      </a>
+      <a class="item" href="<%= Routes.session_path(@conn, :index)%>">Home</a> 
+    </div>
+  </div>
+
+  <div class="ui text container">
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <h2 class="ui inverted image header">
+          <div class="content">
+            Create your account
+            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+          </div>
+        </h2>
+        <%= form_for @changeset, Routes.session_path(@conn, :register_new_user), [method: :post, as: :user], fn f -> %>
+          <div class="ui large form">
+            <div class="ui stacked segment">
+              
+              <div class="field">
+                <div class="ui left icon">
+                  <%= input f, :username %>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui left icon">
+                  <%= input f, :name %>
+                </div>
+              </div>
+              <%= inputs_for f, :credential, fn cf -> %>
+                <div class="field">
+                  <div class="ui left icon">
+                    <%= input cf, :email %>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="ui left icon">
+                    <%= input cf, :password %>
+                  </div>
+                </div>
+              <% end %>
+            <%= submit "Signup", class: "ui fluid large primary submit button"%>
+            </div>
+            <div class="ui error">
+              <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+              <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+            </div>
+          </div>
+        <% end %>
+        <div class="ui message">
+          Already have an account? <%= link "Login", to: Routes.session_path(@conn, :login_page) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

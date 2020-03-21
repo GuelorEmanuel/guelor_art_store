@@ -104,11 +104,6 @@
         max-width: 450px;
       }
   </style>
-  <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/semantic/out/components/visibility.min.js") %>'></script>
-  <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/semantic/out/components/sidebar.min.js") %>'></script>
-  <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/semantic/out/components/transition.min.js") %>'></script>
-  <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/semantic/out/components/form.min.js") %>'></script>
-
     <script>
       $(document)
         .ready(function() {
@@ -134,12 +129,16 @@
         });
     </script>
   </head>
-  <%= render @view_module, @view_template, assigns %>
+  <body>
+    <!-- Page Contents -->
+    <div class="pusher">
+      <%= render @view_module, @view_template, assigns %>
+    </div>
+  </body>
   <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
   <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous">
-  </script>
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 </html>

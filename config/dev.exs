@@ -40,6 +40,11 @@ config :cloudex,
     secret: "VyH8QnQKXs6sXdJDSuapJ1HbFi4",
     cloud_name: "gueloremanuel-com"
 
+# Configure Bamboo Mailer
+config :art_store, ArtStore.Mailer,
+  adapter: Bamboo.LocalAdapter,
+  open_email_in_browser_url: "http://localhost:4000/sent_emails" # optional
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

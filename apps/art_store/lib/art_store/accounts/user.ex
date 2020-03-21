@@ -3,12 +3,16 @@ defmodule ArtStore.Accounts.User do
   import Ecto.Changeset
 
   alias ArtStore.Accounts.Credential
+  alias ArtStore.Chats.{Chat, Message, Participant}
 
   schema "users" do
     field :username, :string
     field :verified, :boolean, default: false
     field :name, :string
     has_one :credential, Credential
+    has_many :chat, Chat
+    has_many :message, Message
+    has_one :participant, Participant
 
     timestamps()
   end
@@ -20,6 +24,6 @@ defmodule ArtStore.Accounts.User do
     |> validate_required([:name, :username, :verified])
     |> unique_constraint(:username)
     |> validate_length(:username, min: 4, max: 50)
-    |> validate_length(:name, max: 150)
+    |> validate_length(:name, min: 1, max: 150)
   end
 end

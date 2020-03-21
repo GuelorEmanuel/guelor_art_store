@@ -1,0 +1,123 @@
+<div class="ui inverted vertical masthead center aligned segment">
+
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a class="toc item">
+        <i class="sidebar icon"></i>
+      </a>
+      <a class="active item">Home</a>
+      <div class="right item">
+        <a class="ui inverted button" href="<%= Routes.session_path(@conn, :login_page)%>">Log in</a>
+        <a class="ui inverted button" href="<%= Routes.session_path(@conn, :signup)%>">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui text container">
+    <h1 class="ui inverted header">
+      Chatter
+    </h1>
+    <h2>Chat about whatever when you want to.</h2>
+    <div>
+      <a class="ui huge primary button" href="<%= Routes.session_path(@conn, :signup)%>">
+         Get Started 
+         <i class="right arrow icon"></i>
+      </a>
+    </div>
+  </div>
+
+</div>
+<div class="ui vertical stripe segment">
+  <div class="ui middle aligned stackable grid container">
+    <div class="row">
+      <div class="eight wide column">
+        <h3 class="ui header">We Help Companies and Companions</h3>
+        <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.</p>
+        <h3 class="ui header">We Make Bananas That Can Dance</h3>
+        <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
+      </div>
+      <div class="six wide right floated column">
+        <img src="assets/images/wireframe/white-image.png" class="ui large bordered rounded image">
+      </div>
+    </div>
+    <div class="row">
+      <div class="center aligned column">
+        <a class="ui huge button">Check Them Out</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ui vertical stripe segment">
+  <div class="ui text container">
+    <h3 class="ui header">Technologies and Tools Used</h3>
+    <ul class="ui list">
+      <li><a href="https://elixir-lang.org/">Elixir</a></li>
+      <li><a href="https://www.phoenixframework.org/">Phoenix Framework</a></li>
+      <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS">CSS</a></li>
+      <li><a href="https://www.docker.com/">Docker</a></li>
+      <li><a href="https://circleci.com/">CircleCI</a></li>
+      <li><a href="https://git-scm.com/">Git</a></li>
+      
+    </ul>
+   
+    <h3 class="ui header">Resources Used</h3>
+    <ul class="ui list">
+      <li>
+        <a href="https://pragprog.com/book/wmecto/programming-ecto">
+          Programming Ecto:
+          Build Database Apps in Elixir for Scalability and Performance
+        </a>
+      </li>
+      <li><a href="https://hexdocs.pm/">HEXDOCS</a>
+        <ul>
+          <li><a href="https://hexdocs.pm/elixir/Kernel.html">Elixir Doc</a></li>
+          <li><a href="https://hexdocs.pm/phoenix/overview.html">Phoenix Framework Doc</a></li>
+          <li><a href="https://hexdocs.pm/ecto/Ecto.html">Ecto Doc</a></li>
+          <li>...</li>
+        </ul>
+      </li>
+      <li><a href="https://www.postgresql.org/">PostgreSQL Doc</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript Doc</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML Doc</a></li>
+      <li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS">CSS Doc</a></li>
+      <li><a href="https://semantic-ui.com/">Semantic UI Doc</a></li>
+      <li><a href="https://docs.docker.com/">Docker Doc</a></li>
+      <li><a href="https://circleci.com/docs/">CircleCI Doc</a></li>
+      <li><a href="https://sendgrid.com/docs/">SendGrid Doc</a></li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="ui inverted vertical footer segment">
+  <div class="ui container">
+    <div class="ui stackable inverted divided equal height stackable grid">
+      <div class="three wide column">
+        <h4 class="ui inverted header">About</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item">Sitemap</a>
+          <a href="#" class="item">Contact Us</a>
+          <a href="#" class="item">Religious Ceremonies</a>
+          <a href="#" class="item">Gazebo Plans</a>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui inverted header">Services</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item">Banana Pre-Order</a>
+          <a href="#" class="item">DNA FAQ</a>
+          <a href="#" class="item">How To Access</a>
+          <a href="#" class="item">Favorite X-Men</a>
+        </div>
+      </div>
+      <div class="seven wide column">
+        <h4 class="ui inverted header">Footer Header</h4>
+        <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+      </div>
+    </div>
+  </div>
+</div>

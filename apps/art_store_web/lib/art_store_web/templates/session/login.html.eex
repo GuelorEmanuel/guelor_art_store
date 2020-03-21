@@ -1,0 +1,50 @@
+<div class="ui inverted vertical masthead center aligned segment">
+  <div class="ui container">
+    <div class="ui large secondary inverted pointing menu">
+      <a class="toc item">
+        <i class="sidebar icon"></i>
+      </a>
+      <a class="item" href="<%= Routes.session_path(@conn, :index)%>">Home</a>
+      
+    </div>
+  </div>
+  <div class="ui text container">
+    <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui inverted image header">
+        <div class="content">
+          Log in to Chatter
+        </div>
+      </h2>
+      <%= form_for @conn, Routes.session_path(@conn, :create), [method: :post, as: :user], fn f -> %>
+        <div class="ui large form">
+          <div class="ui stacked segment">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <%= text_input f, :email, placeholder: "Email" %>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <%= password_input f, :password, placeholder: "Password" %>
+              </div>
+            </div>
+          <%= submit "Login", class: "ui fluid large primary submit button"%>
+          </div>
+          <div class="ui error">
+            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+          </div>
+        </div>
+      <% end %>
+      <div class="ui message">
+        New to us? <%= link "Signup", to: Routes.session_path(@conn, :signup) %>
+      </div>
+    </div>
+  </div>
+  
+  </div>
+
+</div>

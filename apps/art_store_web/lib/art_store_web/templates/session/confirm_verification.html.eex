@@ -1,0 +1,36 @@
+<div class="ui inverted vertical masthead center aligned segment">
+  <div class="ui text container">
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <h2 class="ui inverted image header">
+          <div class="content">
+            We sent you a code
+          </div>
+        </h2>
+        <div class="ui message">
+          Enter it below to verify
+          <%= assigns[:user].credential.email %>
+        </div>
+        <%= form_for @conn, Routes.session_path(@conn, :verify_new_user), [method: :post, as: :user], fn f -> %>
+          <div class="ui large form">
+            <div class="ui stacked secondary  segment">
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="user icon"></i>
+                  <%= text_input f, :vericaton_input, placeholder: "Vericaton code" %>
+                </div>
+              </div>
+            <%= submit "Confirm", class: "ui fluid large teal submit button"%>
+            </div>
+            <div class="ui error"></div>
+              <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+              <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+            </div>
+        <% end %>
+        <div class="ui message">
+          Didn't receive email? <%= link "Send again", to: Routes.session_path(@conn, :signup) %>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>

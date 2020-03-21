@@ -7,7 +7,14 @@ defmodule ArtStore.Application do
 
   def start(_type, _args) do
     children = [
-      ArtStore.Repo
+      ArtStore.Repo,
+      {ConCache,
+      [
+        name: :current_user_cache,
+        ttl_check_interval: 2_000,
+        global_ttl: 2_000,
+        touch_on_read: true
+      ]}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: ArtStore.Supervisor)

@@ -1,0 +1,14 @@
+<!-- Following Menu -->
+<div class="ui large top fixed hidden menu">
+  <div class="ui container">
+    <a class="active item">Home</a>
+    <div class="right menu">
+      <div class="item">
+        <a class="ui button" href="<%= Routes.session_path(@conn, :login_page)%>">Log in</a>
+      </div>
+      <div class="item">
+        <a class="ui primary button" href="<%= Routes.session_path(@conn, :signup)%>">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</div>

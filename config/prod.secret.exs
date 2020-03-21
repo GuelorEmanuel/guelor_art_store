@@ -37,6 +37,11 @@ config :cloudex,
     secret: System.get_env("CLOUDEX_SECRET"),
     cloud_name: System.get_env("CLOUDEX_CLOUD_NAME")
 
+# Configure Bamboo Mailer
+config :art_store, ArtStore.Mailer,
+  adapter: Bamboo.SendGridAdapter,
+  api_key: System.get_env("SENDGRID_API_KEY")
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix

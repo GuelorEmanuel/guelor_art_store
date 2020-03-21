@@ -62,9 +62,13 @@ defmodule ArtStoreWeb.ProductLive.Index do
 
   defp create_stripe_session(name, detail, url, price, id, quantity) do
     params = %{
-      cancel_url: "#{Application.get_env(:art_store_web, ArtStoreWeb.Endpoint)[:cancel_url]}#{id}",
+      billing_address_collection: "auto",
+      shipping_address_collection: %{
+        allowed_countries: ["CA"],
+      },
       payment_method_types: ["card"],
       success_url: "#{Application.get_env(:art_store_web, ArtStoreWeb.Endpoint)[:success_url]}{CHECKOUT_SESSION_ID}",
+      cancel_url: "#{Application.get_env(:art_store_web, ArtStoreWeb.Endpoint)[:cancel_url]}#{id}",
       line_items: [%{
         name: "#{name}",
         description: "#{detail}",
