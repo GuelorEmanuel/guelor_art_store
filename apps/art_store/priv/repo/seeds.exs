@@ -12,10 +12,6 @@
 
 alias ArtStore.Accounts.{Role, User, UserRole, Credential}
 
-user =
-  %User{verified: true, name: "Guelor Emanuel", username: "lore", credential: %Credential{ email: "guelor.emanuel@alumni.carleton.ca", password_hash: Argon2.add_hash("superadmin1234").password_hash}}
-  |> ArtStore.Repo.insert!()
-
 root =
   %Role{role_name: "root"}
   |> ArtStore.Repo.insert!()
@@ -28,8 +24,12 @@ limuser =
   %Role{role_name: "limuser"}
   |> ArtStore.Repo.insert!()
 
-lore_user_role =
-  %UserRole{user: user, role: root}
+# Chat
+owner =
+  %Role{role_name: "Owner"}
   |> ArtStore.Repo.insert!()
 
+
+%Role{role_name: "Agent"}
+|> ArtStore.Repo.insert!()
 

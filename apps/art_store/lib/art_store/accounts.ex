@@ -259,6 +259,36 @@ defmodule ArtStore.Accounts do
   def get_role!(id), do: Repo.get!(Role, id)
 
   @doc """
+  Gets a single role.
+
+  Return `nil` if the role does not exist.
+
+  ## Examples
+
+      iex> get_role_by_name("Owner")
+      %Role{}
+
+      iex> get_role_by_name("sdsd")
+      ** (nil)
+
+  """
+  def get_role_by_name(role_name) do
+    query =
+      from u in Role,
+        where: u.role_name == ^role_name
+
+    query_result =
+      query
+      |> Repo.one()
+
+    case query_result do
+      %Role{} = chat_role ->
+        chat_role
+      nil -> nil
+    end
+  end
+
+  @doc """
   Creates a role.
 
   ## Examples
@@ -353,6 +383,39 @@ defmodule ArtStore.Accounts do
 
   """
   def get_user_role!(id), do: Repo.get!(UserRole, id)
+
+
+   @doc """
+  Gets a single user_role.
+
+  Raises `Ecto.NoResultsError` if the User role does not exist.
+
+  ## Examples
+
+      iex> get_user_role_by_user_id!(123)
+      %UserRole{}
+
+      iex> get_user_role_by_user_id!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_role_by_user_id(id) do
+    query =
+      from u in UserRole,
+        inner_join: c in assoc(u, :user),
+        where: c.id == ^id
+
+    query_result =
+      query
+      |> Repo.one()
+      |> Repo.preload(:role)
+
+    case query_result do
+      %UserRole{} = user_rol ->
+        user_rol
+      nil -> nil
+    end
+  end
 
   @doc """
   Creates a user_role.

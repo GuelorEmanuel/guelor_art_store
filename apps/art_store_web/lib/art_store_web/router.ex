@@ -27,6 +27,10 @@ defmodule ArtStoreWeb.Router do
     plug :authenticate_user
   end
 
+  pipeline :root_auth do
+    plug :authenticate_root_user
+  end
+
   pipeline :redirect_non_auth do
     plug :redirect_authicated_user
   end
@@ -71,8 +75,9 @@ defmodule ArtStoreWeb.Router do
   end
 
   scope "/admin", ArtStoreWeb do
-    pipe_through [:browser, :auth]
+    pipe_through [:browser, :root_auth]
 
+    get "/create_product", ProductController, :admin
     resources "/store", ProductController
     resources "/users", UserController
     resources "/purchases", PurchaseController, only: [:create]
@@ -86,6 +91,35 @@ defmodule ArtStoreWeb.Router do
         |> Phoenix.Controller.redirect(to: "/chatter/login")
         |> halt()
       user_id ->
+        conn
+        |> assign(:current_user, Accounts.get_user(user_id))
+    end
+  end
+
+  defp check_user_root_status(conn) do
+    case get_session(conn, :user_id) do
+      nil ->
+        {:not_root, nil}
+      user_id ->
+        user_role =
+          Accounts.get_user(user_id).id
+          |> Accounts.get_user_role_by_user_id()
+        cond do
+          user_role.role.role_name === "root" ->
+            {:root, user_id}
+          true ->
+            {:not_root, nil}
+        end
+    end
+  end
+
+  defp authenticate_root_user(conn, _) do
+    case check_user_root_status(conn) do
+      {:not_root, _} ->
+        conn
+        |> Phoenix.Controller.redirect(to: "/")
+        |> halt()
+      {:root, user_id} ->
         conn
         |> assign(:current_user, Accounts.get_user(user_id))
     end

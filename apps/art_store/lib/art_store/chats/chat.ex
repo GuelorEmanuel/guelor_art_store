@@ -6,7 +6,6 @@ defmodule ArtStore.Chats.Chat do
     field :subject, :string
     field :is_group_chat, :boolean, default: true
 
-
     timestamps()
   end
 

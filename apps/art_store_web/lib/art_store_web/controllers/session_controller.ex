@@ -2,7 +2,7 @@ defmodule ArtStoreWeb.SessionController do
   use ArtStoreWeb, :controller
 
   alias ArtStore.Accounts
-  alias ArtStore.Accounts.{User}
+  alias ArtStore.Accounts.{User, Role, UserRole}
   alias ArtStoreWeb.Email
   alias ArtStore.Mailer
 
@@ -167,12 +167,27 @@ defmodule ArtStoreWeb.SessionController do
 
   def verify_new_user(conn, %{"user" => user_params}) do
     user_id = "#{get_session_helper(conn)}"
+    admin_email = "guelor.emanuel@alumni.carleton.ca"
 
     Logger.warn("user_params #{inspect(user_params)}")
 
     with {:ok, {verification_code, user}} <- get_user_verification_code(user_id),
          {:ok, user} <- verify_verification_code(verification_code, user_params, user),
          {:ok, new_user} <- Accounts.update_user(user, %{"verified" => true}) do
+
+          cond do
+            new_user.credential.email === admin_email ->
+              user_role =
+              "root"
+              |> Accounts.get_role_by_name()
+              Accounts.create_user_role(%{}, new_user, user_role)
+            true ->
+              user_role =
+              "limuser"
+              |> Accounts.get_role_by_name()
+              Accounts.create_user_role(%{}, new_user, user_role)
+          end
+
           login(conn, new_user)
           |> redirect(to: Routes.chat_path(conn, :index))
     else

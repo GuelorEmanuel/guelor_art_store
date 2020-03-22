@@ -179,4 +179,61 @@ defmodule ArtStore.ChatsTest do
   #     assert %Ecto.Changeset{} = Chats.change_participant(participant)
   #   end
   # end
+
+  describe "chatroles" do
+    alias ArtStore.Chats.ChatRole
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def chat_role_fixture(attrs \\ %{}) do
+      {:ok, chat_role} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Chats.create_chat_role()
+
+      chat_role
+    end
+
+    test "list_chatroles/0 returns all chatroles" do
+      chat_role = chat_role_fixture()
+      assert Chats.list_chatroles() == [chat_role]
+    end
+
+    test "get_chat_role!/1 returns the chat_role with given id" do
+      chat_role = chat_role_fixture()
+      assert Chats.get_chat_role!(chat_role.id) == chat_role
+    end
+
+    test "create_chat_role/1 with valid data creates a chat_role" do
+      assert {:ok, %ChatRole{} = chat_role} = Chats.create_chat_role(@valid_attrs)
+    end
+
+    test "create_chat_role/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Chats.create_chat_role(@invalid_attrs)
+    end
+
+    test "update_chat_role/2 with valid data updates the chat_role" do
+      chat_role = chat_role_fixture()
+      assert {:ok, %ChatRole{} = chat_role} = Chats.update_chat_role(chat_role, @update_attrs)
+    end
+
+    test "update_chat_role/2 with invalid data returns error changeset" do
+      chat_role = chat_role_fixture()
+      assert {:error, %Ecto.Changeset{}} = Chats.update_chat_role(chat_role, @invalid_attrs)
+      assert chat_role == Chats.get_chat_role!(chat_role.id)
+    end
+
+    test "delete_chat_role/1 deletes the chat_role" do
+      chat_role = chat_role_fixture()
+      assert {:ok, %ChatRole{}} = Chats.delete_chat_role(chat_role)
+      assert_raise Ecto.NoResultsError, fn -> Chats.get_chat_role!(chat_role.id) end
+    end
+
+    test "change_chat_role/1 returns a chat_role changeset" do
+      chat_role = chat_role_fixture()
+      assert %Ecto.Changeset{} = Chats.change_chat_role(chat_role)
+    end
+  end
 end

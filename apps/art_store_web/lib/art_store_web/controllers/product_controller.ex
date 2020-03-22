@@ -8,6 +8,11 @@ defmodule ArtStoreWeb.ProductController do
 
   require Logger
 
+  def admin(conn, _params) do
+    products = Products.list_products()
+    render(conn, "admin.html", products: products)
+  end
+
   def index(conn, _params) do
     products = Products.list_products()
     render(conn, "index.html", products: products)

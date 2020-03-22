@@ -9,7 +9,9 @@
         </h2>
         <div class="ui message">
           Enter it below to verify
-          <%= assigns[:user].credential.email %>
+          <%= if assigns[:user] do %>
+             <%= assigns[:user].credential.email %>
+          <% end %>
         </div>
         <%= form_for @conn, Routes.session_path(@conn, :verify_new_user), [method: :post, as: :user], fn f -> %>
           <div class="ui large form">

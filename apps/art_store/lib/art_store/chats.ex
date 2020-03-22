@@ -293,4 +293,100 @@ defmodule ArtStore.Chats do
   def change_participant(%Participant{} = participant) do
     Participant.changeset(participant, %{})
   end
+
+  alias ArtStore.Chats.ChatRole
+
+  @doc """
+  Returns the list of chatroles.
+
+  ## Examples
+
+      iex> list_chatroles()
+      [%ChatRole{}, ...]
+
+  """
+  def list_chatroles do
+    Repo.all(ChatRole)
+  end
+
+  @doc """
+  Gets a single chat_role.
+
+  Raises `Ecto.NoResultsError` if the Chat role does not exist.
+
+  ## Examples
+
+      iex> get_chat_role!(123)
+      %ChatRole{}
+
+      iex> get_chat_role!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_chat_role!(id), do: Repo.get!(ChatRole, id)
+
+  @doc """
+  Creates a chat_role.
+
+  ## Examples
+
+      iex> create_chat_role(%{field: value})
+      {:ok, %ChatRole{}}
+
+      iex> create_chat_role(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_chat_role(attrs \\ %{}) do
+    %ChatRole{}
+    |> ChatRole.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a chat_role.
+
+  ## Examples
+
+      iex> update_chat_role(chat_role, %{field: new_value})
+      {:ok, %ChatRole{}}
+
+      iex> update_chat_role(chat_role, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_chat_role(%ChatRole{} = chat_role, attrs) do
+    chat_role
+    |> ChatRole.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a chat_role.
+
+  ## Examples
+
+      iex> delete_chat_role(chat_role)
+      {:ok, %ChatRole{}}
+
+      iex> delete_chat_role(chat_role)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_chat_role(%ChatRole{} = chat_role) do
+    Repo.delete(chat_role)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking chat_role changes.
+
+  ## Examples
+
+      iex> change_chat_role(chat_role)
+      %Ecto.Changeset{source: %ChatRole{}}
+
+  """
+  def change_chat_role(%ChatRole{} = chat_role) do
+    ChatRole.changeset(chat_role, %{})
+  end
 end
