@@ -52,7 +52,8 @@ defmodule ArtStoreWeb.MixProject do
       {:phoenix_gon, "~> 0.4.0"},
       {:phoenix_live_view, "~> 0.9.0"},
       {:argon2_elixir, "~> 2.0"},
-      {:color_stream, "~> 0.0.1"}
+      {:color_stream, "~> 0.0.1"},
+      {:poison, "~> 4.0"}
     ]
   end
 
