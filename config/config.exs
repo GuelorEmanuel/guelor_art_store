@@ -24,6 +24,7 @@ config :art_store_web, ArtStoreWeb.Endpoint,
   render_errors: [view: ArtStoreWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ArtStoreWeb.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [signing_salt: "gz6BPWYL"]
+  check_origin: ["//gueloremanuel.com", "https://alarmed-purple-gerenuk.gigalixirapp.com"]
 
 # Configures Elixir's Logger
 config :logger, :console,
