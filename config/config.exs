@@ -23,7 +23,7 @@ config :art_store_web, ArtStoreWeb.Endpoint,
   secret_key_base: "p11KmEmPjTlVabRIdWmDSOf15GLHA/99vaXP0KvJt2nyopwjzcoLNRRSHWsCUXYe",
   render_errors: [view: ArtStoreWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ArtStoreWeb.PubSub, adapter: Phoenix.PubSub.PG2],
-  live_view: [signing_salt: "gz6BPWYL"]
+  live_view: [signing_salt: "gz6BPWYL"],
   check_origin: ["//gueloremanuel.com", "https://alarmed-purple-gerenuk.gigalixirapp.com"]
 
 # Configures Elixir's Logger
