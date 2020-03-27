@@ -42,8 +42,13 @@
     }
     container.appendChild(docFrag);
   }
-  var image2 ='<%= Routes.static_path(@conn, "/images/streams-of-thought/dance.jpg") %>';
   preload(
-      image2
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/dance.jpg") %>',
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/dance2.jpg") %>',
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/dance6.jpg") %>',
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/dance5.jpg") %>',
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/sandy_hill_life_drawing_2.jpg") %>',
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/himba_tribes.jpg") %>',
+    '<%= Routes.static_path(@conn, "/images/streams-of-thought/thank_you.jpg") %>'
   );
 </script>
