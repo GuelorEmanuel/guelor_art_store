@@ -6,7 +6,10 @@ defmodule ArtStore.Chats do
   import Ecto.Query, warn: false
   alias ArtStore.Repo
 
+  alias ArtStore.Chats
   alias ArtStore.Chats.Chat
+
+  require Logger
 
   @doc """
   Returns the list of chats.
@@ -38,6 +41,53 @@ defmodule ArtStore.Chats do
   def get_chat!(id), do: Repo.get!(Chat, id)
 
   @doc """
+  Gets a single chat.
+
+  Raises `nil` if the Chat does not exist.
+
+  ## Examples
+
+      iex> get_chat(123)
+      %Chat{}
+
+      iex> get_chat(456)
+      ** nil
+
+  """
+  def get_chat(id) do
+    query =
+      from c in Chat,
+        where: c.id == ^id,
+        preload: [message: :user]
+
+    Repo.one(query)
+  end
+
+    @doc """
+  Gets a single chat.
+
+  Raises `Ecto.NoResultsError` if the Chat does not exist.
+
+  ## Examples
+
+      iex> get_chat!(123)
+      %Chat{}
+
+      iex> get_chat!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_curr_user_chat(id) do
+    query =
+      from c in Chat,
+      inner_join: p in assoc(c, :participant),
+      where: p.user_id == ^id
+
+    query
+    |> Repo.all()
+    |> Repo.preload(:participant)
+  end
+  @doc """
   Creates a chat.
 
   ## Examples
@@ -53,6 +103,33 @@ defmodule ArtStore.Chats do
     %Chat{}
     |> Chat.changeset(attrs)
     |> Repo.insert()
+  end
+
+   @doc """
+  Creates a chat.
+
+  ## Examples
+
+      iex> create_chat_with_associationst(%{field: value}, chat_participant)
+      {:ok, %Chat{}}
+
+      iex> create_chat_with_associationst(%{field: bad_value}, chat_participant)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_chat_with_associationst(attrs \\ %{}, chat_participants) do
+    Repo.transaction(fn ->
+      chat =
+        %Chat{}
+         |> Chat.changeset(attrs)
+         |> Repo.insert!()
+
+      Enum.map(chat_participants,
+                fn(chat_participant) ->
+                  create_chat_role(chat_participant.user, chat, chat_participant.role)
+                  create_participant(chat, chat_participant.user)
+      end)
+    end)
   end
 
   @doc """
@@ -148,7 +225,9 @@ defmodule ArtStore.Chats do
   def create_message(attrs \\ %{}) do
     %Message{}
     |> Message.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert!()
+
+    Chats.get_chat(attrs["chat_id"])
   end
 
   @doc """
@@ -196,6 +275,14 @@ defmodule ArtStore.Chats do
   """
   def change_message(%Message{} = message) do
     Message.changeset(message, %{})
+  end
+
+  def change_message do
+    Message.changeset(%Message{}, %{})
+  end
+
+  def change_message(changeset, changes) do
+    Message.changeset(changeset, changes)
   end
 
   alias ArtStore.Chats.Participant
@@ -248,6 +335,28 @@ defmodule ArtStore.Chats do
   end
 
   @doc """
+  Creates a participant.
+
+  ## Examples
+
+      iex> create_participant(%Chat{}, %User{})
+      {:ok, %Participant{}}
+
+      iex> create_participant(%Chat{}, %User{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_participant(chat, user) do
+    {:ok, datetime} = DateTime.now("Etc/UTC")
+
+    %Participant{}
+    |> Participant.changeset(%{"last_read" => datetime})
+    |> Ecto.Changeset.put_assoc(:chat, chat)
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Repo.insert!()
+  end
+
+  @doc """
   Updates a participant.
 
   ## Examples
@@ -292,6 +401,36 @@ defmodule ArtStore.Chats do
   """
   def change_participant(%Participant{} = participant) do
     Participant.changeset(participant, %{})
+  end
+
+   @doc """
+  Gets a single participant.
+
+  Raises `Ecto.NoResultsError` if the User role does not exist.
+
+  ## Examples
+
+      iex> get_participant_by_user_id(123)
+      %UserRole{}
+
+      iex> get_participant_by_user_id(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_participant_by_user_id(%{"chat_id" => chat_id, "user_id" => user_id}) do
+    query =
+      from p in Participant,
+        where: p.user_id == ^user_id and p.chat_id == ^chat_id
+
+    query_result =
+      query
+      |> Repo.one()
+
+    case query_result do
+      %Participant{} = participant ->
+        participant
+      nil -> nil
+    end
   end
 
   alias ArtStore.Chats.ChatRole
@@ -341,6 +480,27 @@ defmodule ArtStore.Chats do
     %ChatRole{}
     |> ChatRole.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  create_chat_role.
+
+  ## Examples
+
+      iex> create_chat_role(%User{}, %Chat{}, %Role{})
+      {:ok, %ChatRole{}}
+
+      iex> create_chat_role(%User{}, %Chat{}, %Role{})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_chat_role(user, chat, role) do
+    %ChatRole{}
+    |> ChatRole.changeset(%{})
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Ecto.Changeset.put_assoc(:role, role)
+    |> Ecto.Changeset.put_assoc(:chat, chat)
+    |> Repo.insert!()
   end
 
   @doc """

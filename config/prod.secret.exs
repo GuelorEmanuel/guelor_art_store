@@ -40,7 +40,8 @@ config :cloudex,
 # Configure Bamboo Mailer
 config :art_store, ArtStore.Mailer,
   adapter: Bamboo.SendGridAdapter,
-  api_key: System.get_env("SENDGRID_API_KEY")
+  api_key: System.get_env("SENDGRID_API_KEY"),
+  ge_public_email: System.get_env("GE_PUBLIC_EMAIL")
 
 # ## Using releases (Elixir v1.9+)
 #

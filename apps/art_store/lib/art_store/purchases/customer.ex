@@ -1,5 +1,8 @@
 defmodule ArtStore.Purchases.Customer do
   use Ecto.Schema
+
+  @timestamps_opts [type: :utc_datetime]
+
   import Ecto.Changeset
 
   alias ArtStore.Products.Product

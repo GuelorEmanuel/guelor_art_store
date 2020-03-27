@@ -29,21 +29,22 @@ config :art_store_web, ArtStoreWeb.Endpoint,
       cd: Path.expand("../apps/art_store_web/assets", __DIR__)
     ]
   ],
-  cancel_url: "http://localhost:4000/store/",
-  success_url: "http://localhost:400/store/success?session_id=",
-  stripe_pk: "pk_test_dG6vpZDNXycfGGBUBgxQ49Ko00fCGjSoCx"
+  cancel_url: System.get_env("PRODUCT_DEV_CANCEL_URL"),
+  success_url: System.get_env("PRODUCT_DEV_SUCCESS_URL"),
+  stripe_pk: System.get_env("STRIPE_PK")
 
 config :stripity_stripe, api_key: "sk_test_NIwu1PjrpJGuaAKKw2s58PDX00Rg9WM2Y8"
 
 config :cloudex,
-    api_key: "915756558412773",
-    secret: "VyH8QnQKXs6sXdJDSuapJ1HbFi4",
-    cloud_name: "gueloremanuel-com"
+    api_key: System.get_env("CLOUDEX_API_KEY"),
+    secret: System.get_env("CLOUDEX_SECRET"),
+    cloud_name: System.get_env("CLOUDEX_CLOUD_NAME")
 
 # Configure Bamboo Mailer
 config :art_store, ArtStore.Mailer,
   adapter: Bamboo.LocalAdapter,
-  open_email_in_browser_url: "http://localhost:4000/sent_emails" # optional
+  open_email_in_browser_url: "http://localhost:4000/sent_emails", # optional
+  ge_public_email: System.get_env("GE_DEV_PUBLIC_EMAIL")
 
 # ## SSL Support
 #

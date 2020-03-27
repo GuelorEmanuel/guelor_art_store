@@ -6,6 +6,7 @@
         <i class="sidebar icon"></i>
       </a>
       <a class="active item">Chats</a>
+      <a class="item" href="<%= Routes.chat_path(@conn, :new)%>">New Chat</a>
       <div class="right item">
         <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
           <%= submit "logout", class: "ui inverted button" %>
@@ -14,30 +15,19 @@
     </div>
   </div>
 
-  <div class="ui text container">
-    <h1>Listing Chats</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Subject</th>
-
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
+  <div class="ui middle aligned divided list inverted">
     <%= for chat <- @chats do %>
-        <tr>
-          <td><%= chat.subject %></td>
-
-          <td>
-            <span><%= link "Show", to: Routes.chat_path(@conn, :show, chat) %></span>
-            <span><%= link "Edit", to: Routes.chat_path(@conn, :edit, chat) %></span>
-            <span><%= link "Delete", to: Routes.chat_path(@conn, :delete, chat), method: :delete, data: [confirm: "Are you sure?"] %></span>
-          </td>
-        </tr>
+        <div class="item inverted">
+          <div class="right floated content">
+            <div class="ui button inverted"><%= link "Show", to: Routes.chat_path(@conn, :show, chat) %></div>
+            <div class="ui button inverted"><%= link "Leave", to: Routes.chat_path(@conn, :delete, chat), method: :delete, data: [confirm: "Are you sure?"] %></div>
+          </div>
+          <img class="ui avatar image" src="https://picsum.photos/seed/picsum/200/300">
+          <div class="content">
+            <div class="header"><%= chat.subject %></div>
+            An excellent companion
+          </div>
+        </div>
     <% end %>
-      </tbody>
-    </table>
-    <span><%= link "New Chat", to: Routes.chat_path(@conn, :new) %></span>
   </div>
 </div>

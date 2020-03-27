@@ -1,5 +1,8 @@
 defmodule ArtStore.Products.Product do
   use Ecto.Schema
+
+  @timestamps_opts [type: :utc_datetime]
+
   import Ecto.Changeset
 
   alias ArtStore.Purchases.Customer
@@ -12,7 +15,7 @@ defmodule ArtStore.Products.Product do
     field :url, :string, size: 200
     field :available, :boolean, default: false
     has_many :customer, Customer
-    
+
     timestamps()
   end
 

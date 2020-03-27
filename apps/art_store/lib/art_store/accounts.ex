@@ -94,7 +94,9 @@ defmodule ArtStore.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs) do
+  def update_user(%User{id: id} = user, attrs) do
+    ConCache.dirty_delete(:current_user_cache, id)
+
     user
     |> User.changeset(attrs)
     |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
@@ -227,6 +229,32 @@ defmodule ArtStore.Accounts do
     Credential.changeset(credential, %{})
   end
 
+
+  @doc """
+   Returns the list of credentials.
+
+  ## Examples
+
+      iex> get_credentials_by_emails([emai1, email2,..])
+      [%Credential{}, ...]
+
+      iex> get_credentials_by_emails([emai1, email2,..])
+      []
+
+  """
+  def get_credentials_by_emails(emails) do
+    query =
+      from r in Credential,
+      where: r.email in ^emails
+
+    query_result =
+      query
+      |> Repo.all()
+      |> Repo.preload(:user)
+
+    query_result
+  end
+
   alias ArtStore.Accounts.Role
 
   @doc """
@@ -282,8 +310,8 @@ defmodule ArtStore.Accounts do
       |> Repo.one()
 
     case query_result do
-      %Role{} = chat_role ->
-        chat_role
+      %Role{} = role ->
+        role
       nil -> nil
     end
   end
@@ -385,7 +413,7 @@ defmodule ArtStore.Accounts do
   def get_user_role!(id), do: Repo.get!(UserRole, id)
 
 
-   @doc """
+  @doc """
   Gets a single user_role.
 
   Raises `Ecto.NoResultsError` if the User role does not exist.

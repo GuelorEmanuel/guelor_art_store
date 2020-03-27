@@ -1,5 +1,8 @@
 defmodule ArtStore.Accounts.Credential do
   use Ecto.Schema
+
+  @timestamps_opts [type: :utc_datetime]
+
   import Ecto.Changeset
 
   alias ArtStore.Accounts.User

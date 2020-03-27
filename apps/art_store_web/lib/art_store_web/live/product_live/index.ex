@@ -2,6 +2,8 @@ defmodule ArtStoreWeb.ProductLive.Index do
   use Phoenix.LiveView
 
   alias ArtStoreWeb.ProductView
+  require Logger
+
 
   def mount(_params, %{"product" => product}, socket) do
     prod_quantity =
@@ -38,8 +40,30 @@ defmodule ArtStoreWeb.ProductLive.Index do
     case create_stripe_session_helper(values) do
       {:ok, res} ->
         {:noreply, assign(socket, :checkout_session_id, res.id)}
+      {:less_than_equal_to_zero, _quantity} ->
+        {:noreply, assign(socket, :checkout_session_err, "You must add a quantity greater than zero.")}
+      {:gtr_than_p_quantity, p_quantity} ->
+        {:noreply, assign(socket, :checkout_session_err, "Sorry, we only have #{p_quantity} of that item available.")}
+      {:error, _quantity} ->
+        {:noreply, assign(socket, :checkout_session_err, "Invalid value given.")}
       {_, _err_res} ->
-        {:noreply, assign(socket, :checkout_session_err, "This item isn't available at the moment")}
+        {:noreply, assign(socket, :checkout_session_err, "This item isn't available at the moment.")}
+    end
+  end
+
+  defp less_than_equal_to_zero_p_quantinty(quantity) do
+    case quantity <= 0 do
+      false -> {:ok, quantity}
+      _ -> {:less_than_equal_to_zero, quantity}
+    end
+  end
+
+  defp greater_than_equal_to_zero_p_quantinty(quantity, p_quantity) do
+    {temp_p_val, _} = Integer.parse(p_quantity)
+
+    case quantity <= temp_p_val do
+      true -> {:ok, quantity}
+      _ -> {:gtr_than_p_quantity, temp_p_val}
     end
   end
 
@@ -48,8 +72,17 @@ defmodule ArtStoreWeb.ProductLive.Index do
                                       "myvar3" => url,
                                       "myvar4" => price,
                                       "myvar5" => id,
+                                      "myvar6" => p_quantity,
                                       "value" => quantity}) do
-    create_stripe_session(name, detail, url, price, id, quantity)
+    with {quantity, _} <- Integer.parse(quantity),
+         {:ok, _} <- less_than_equal_to_zero_p_quantinty(quantity),
+         {:ok, quantity} <- greater_than_equal_to_zero_p_quantinty(quantity, p_quantity) do
+          create_stripe_session(name, detail, url, price, id, quantity)
+    else
+      {:less_than_equal_to_zero, quantity} -> {:less_than_equal_to_zero, quantity}
+      {:gtr_than_p_quantity, quantity} -> {:gtr_than_p_quantity, quantity}
+      :error -> {:error, quantity}
+    end
   end
   defp create_stripe_session_helper(%{"name" => name,
                                       "detail" => detail,

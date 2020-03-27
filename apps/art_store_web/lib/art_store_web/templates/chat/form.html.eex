@@ -8,8 +8,15 @@
   <%= label f, :subject %>
   <%= text_input f, :subject %>
   <%= error_tag f, :subject %>
+  <%= array_input f, :emails %>
+  <%= error_tag f, :emails %>
+  <%= array_add_button f, :emails %>
+
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Create" %>
   </div>
 <% end %>
+
+
+

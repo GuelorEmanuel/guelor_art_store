@@ -21,6 +21,6 @@ defmodule ArtStoreWeb.Email do
 
   defp base_email() do
     new_email()
-    |> from("Chatter <ncstech07t@gmail.com>")
+    |> from("Chatter <#{Application.get_env(:art_store, ArtStore.Mailer)[:ge_public_email]}>")
   end
 end

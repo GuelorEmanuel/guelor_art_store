@@ -31,10 +31,14 @@
   <div class="ui middle aligned stackable grid container">
     <div class="row">
       <div class="eight wide column">
-        <h3 class="ui header">We Help Companies and Companions</h3>
-        <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.</p>
-        <h3 class="ui header">We Make Bananas That Can Dance</h3>
-        <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
+        <h3 class="ui header">What is the purpose of this project?</h3>
+        <p>
+         First of all, this project is ongoing. The main purpose of this project is for me to 
+         deeply explore the Elixir programming language and Phoenix framework and also for me 
+         to learn how web applications can be <a href="https://google-gruyere.appspot.com/">exploited and how to defend against these attacks.</a>
+        </p>
+        <h3 class="ui header">Chatter System Requirement Analysis</h3>
+        <p>You can read more about the requirement by clicking the button below.</p>
       </div>
       <div class="six wide right floated column">
         <img src="https://res.cloudinary.com/gueloremanuel-com/image/upload/v1584326042/aufbfadktohcnwyjls1t.jpg" class="ui large bordered rounded image">
@@ -42,7 +46,7 @@
     </div>
     <div class="row">
       <div class="center aligned column">
-        <a class="ui huge button">Check Them Out</a>
+        <a href="https://docs.google.com/document/d/13ZyvZI8bfml2Ym7i_tIeBqwcQZpLchFIFkWxYNqdTNY/edit?usp=sharing" class="ui huge button">Chatter System Requirement Analysis</a>
       </div>
     </div>
   </div>
@@ -77,7 +81,7 @@
           <li><a href="https://hexdocs.pm/elixir/Kernel.html">Elixir Doc</a></li>
           <li><a href="https://hexdocs.pm/phoenix/overview.html">Phoenix Framework Doc</a></li>
           <li><a href="https://hexdocs.pm/ecto/Ecto.html">Ecto Doc</a></li>
-          <li>...</li>
+          <li>...etc</li>
         </ul>
       </li>
       <li><a href="https://www.postgresql.org/">PostgreSQL Doc</a></li>
@@ -88,6 +92,8 @@
       <li><a href="https://docs.docker.com/">Docker Doc</a></li>
       <li><a href="https://circleci.com/docs/">CircleCI Doc</a></li>
       <li><a href="https://sendgrid.com/docs/">SendGrid Doc</a></li>
+      <li><a href="https://cloudinary.com/documentation">Cloudinary Doc</a></li>
+      <li><a href="https://gigalixir.readthedocs.io/en/latest/main.html">Gigalixir Doc</a></li>
     </ul>
   </div>
 </div>
@@ -99,24 +105,12 @@
       <div class="three wide column">
         <h4 class="ui inverted header">About</h4>
         <div class="ui inverted link list">
-          <a href="#" class="item">Sitemap</a>
-          <a href="#" class="item">Contact Us</a>
-          <a href="#" class="item">Religious Ceremonies</a>
-          <a href="#" class="item">Gazebo Plans</a>
-        </div>
-      </div>
-      <div class="three wide column">
-        <h4 class="ui inverted header">Services</h4>
-        <div class="ui inverted link list">
-          <a href="#" class="item">Banana Pre-Order</a>
-          <a href="#" class="item">DNA FAQ</a>
-          <a href="#" class="item">How To Access</a>
-          <a href="#" class="item">Favorite X-Men</a>
+          <a href="http://www.gueloremanuel.com/about" class="item">Guelor Emanuel</a>
         </div>
       </div>
       <div class="seven wide column">
-        <h4 class="ui inverted header">Footer Header</h4>
-        <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+        <h4 class="ui inverted header">Intersted in Art?</h4>
+        <p>Check out my artwork at <a href="http://www.gueloremanuel.com/">gueloremanuel.com</a></p>
       </div>
     </div>
   </div>

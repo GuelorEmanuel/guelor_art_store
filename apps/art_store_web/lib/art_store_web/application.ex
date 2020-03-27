@@ -9,7 +9,8 @@ defmodule ArtStoreWeb.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      ArtStoreWeb.Endpoint
+      ArtStoreWeb.Endpoint,
+      ArtStoreWeb.Presence
       # Starts a worker by calling: ArtStoreWeb.Worker.start_link(arg)
       # {ArtStoreWeb.Worker, arg},
     ]

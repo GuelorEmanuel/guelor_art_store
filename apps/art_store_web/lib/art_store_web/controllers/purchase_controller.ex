@@ -8,7 +8,14 @@ defmodule ArtStoreWeb.PurchaseController do
 
   require Logger
 
-  
+  def receipt(conn, params) do
+    customer = params["customer_id"]
+      |> Purchases.get_customer!()
+      |> Repo.preload(:product)
+    product = customer.product
+    render(conn, "receipt.html", customer: customer, product: product)
+  end
+
   def create_a_checkout_session(conn, params) do
     params = %{
       cancel_url: "https://stripe.com",
@@ -39,7 +46,7 @@ defmodule ArtStoreWeb.PurchaseController do
   def create(conn, params) do
     # product = Products.get_product!(params["id"])
 
-    # customer = 
+    # customer =
     #   params
     #   |> customer_changeset()
     #   |> Ecto.changeset.put_assoc(:product, product)
@@ -47,7 +54,7 @@ defmodule ArtStoreWeb.PurchaseController do
     #   |> Repo.insert!()
 
     # case Purchases.charge_customer(customer, product.price) do
-    #   {:ok, _charge} -> 
+    #   {:ok, _charge} ->
     #     #show the receipt to the customer, just email it to them
     #     conn
     #   {:error, _msg} ->

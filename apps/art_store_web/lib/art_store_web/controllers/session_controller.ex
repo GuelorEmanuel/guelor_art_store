@@ -2,7 +2,7 @@ defmodule ArtStoreWeb.SessionController do
   use ArtStoreWeb, :controller
 
   alias ArtStore.Accounts
-  alias ArtStore.Accounts.{User, Role, UserRole}
+  alias ArtStore.Accounts.User
   alias ArtStoreWeb.Email
   alias ArtStore.Mailer
 
@@ -28,12 +28,12 @@ defmodule ArtStoreWeb.SessionController do
 
   defp check_password(user, given_pass) do
     Logger.warn("check_password user: #{inspect(user)}")
-   case Argon2.check_pass(user.credential, given_pass) do
-    {:ok, user} ->
-      {:ok, user}
-    {:error, msg} ->
-      {:invalid_password, msg}
-   end
+    case Argon2.check_pass(user.credential, given_pass) do
+      {:ok, user} ->
+        {:ok, user}
+      {:error, msg} ->
+        {:invalid_password, msg}
+    end
   end
 
   defp login(conn, user) do
@@ -196,7 +196,7 @@ defmodule ArtStoreWeb.SessionController do
         user =
           user_id
           |> String.to_integer()
-          |> Accounts.get_user!()
+          |> current_user_from_cache_or_repo()
 
         email = user.credential.email
 
@@ -231,7 +231,7 @@ defmodule ArtStoreWeb.SessionController do
 
   defp current_user_from_cache_or_repo(user_id) do
     ConCache.get_or_store(:current_user_cache, user_id, fn ->
-      Accounts.get_user(user_id)
+      Accounts.get_user!(user_id)
     end)
   end
 end

@@ -1,11 +1,18 @@
 defmodule ArtStore.Chats.ChatRole do
   use Ecto.Schema
+
+  @timestamps_opts [type: :utc_datetime]
+
   import Ecto.Changeset
 
+  alias ArtStore.Accounts.{User, Role}
+  alias ArtStore.Chats.Chat
+
+
   schema "chatroles" do
-    field :user_id, :id
-    field :chat_id, :id
-    field :role_id, :id
+    belongs_to :user, User
+    belongs_to :chat, Chat
+    belongs_to :role, Role
 
     timestamps()
   end
