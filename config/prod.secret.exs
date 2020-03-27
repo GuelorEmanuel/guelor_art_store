@@ -14,7 +14,7 @@ database_url =
 config :art_store, ArtStore.Repo,
   ssl: true,
   url: database_url,
-  pool_size: String.to_integer("1")
+  pool_size: String.to_integer("2")
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
