@@ -19,7 +19,7 @@ config :art_store_web,
 
 # Configures the endpoint
 config :art_store_web, ArtStoreWeb.Endpoint,
-  url: [host: "gueloremanuel.com"],
+  url: [host: "localhost"],
   secret_key_base: "p11KmEmPjTlVabRIdWmDSOf15GLHA/99vaXP0KvJt2nyopwjzcoLNRRSHWsCUXYe",
   render_errors: [view: ArtStoreWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ArtStoreWeb.PubSub, adapter: Phoenix.PubSub.PG2],
