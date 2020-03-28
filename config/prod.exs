@@ -12,7 +12,7 @@ use Mix.Config
 # force_ssl: [rewrite_on: [:x_forwarded_proto]],
 
 config :art_store_web, ArtStoreWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [host: "gueloremanuel.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   cancel_url: System.get_env("PRODUCT_CANCEL_URL"),
   success_url: System.get_env("PRODUCT_SUCCESS_URL"),
