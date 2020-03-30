@@ -106,14 +106,15 @@ defmodule ArtStoreWeb.SessionController do
                  %ConCache.Item{value: user_value, ttl: one_day_in_seconds})
   end
 
+  # Deliveries that fail will raise, but will not be retried, and will not bring down the calling process
   defp send_verification_email(email, verification_code) do
     email
     |> Email.verification_code_email(verification_code)
-    |> Mailer.deliver_later()
+    |> Mailer.deliver_later() # Sends an email in the background using Task.Supervisor.
   end
 
   defp generate_verification_code() do
-    verification_code = Enum.random(1_00009..9_99999)
+    Enum.random(1_00009..9_99999)
   end
 
   defp send_verification_code(user, email) do

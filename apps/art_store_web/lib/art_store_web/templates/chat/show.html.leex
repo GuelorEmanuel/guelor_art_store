@@ -14,7 +14,12 @@
       <div class="chat-content">
         <div class="list-group">
           <div class="list-group-item active">
-            <h2><%= @chat.subject %></h2>
+            <%= if @chat.is_group_chat do %>
+              <div class="header"><%= @chat.subject %></div>
+            <% end %>
+            <%= if not @chat.is_group_chat do %>
+              <div class="header"><%= get_participant_name(@chat.participant, @current_user) %></div>
+            <% end %>
           </div>
           <div class="list-group-item  messages">
             <ul>
@@ -27,22 +32,22 @@
             </ul>
           </div>
         </div>
-
+        
         <div class="form-group ui reply form">
           <%= form_for @message, "#", [phx_change: :typing, phx_submit: :message], fn _f -> %>
-          <div class="field">
-            <%= textarea :message, :content, value: @message.changes[:content], phx_blur: "stop_typing", placeholder: "write your message here..." %>
-          </div>
-          <%= hidden_input :message, :user_id, value: @current_user.id  %>
-          <%= hidden_input :message, :chat_id, value: @chat.id  %>
-          <%= submit "submit", class: "ui blue submit icon button" %>
+            <div class="field">
+              <%= textarea :message, :content, value: @message.changes[:content], placeholder: "write your message here..." %>
+            </div>
+            <%= hidden_input :message, :user_id, value: @current_user.id  %>
+            <%= hidden_input :message, :chat_id, value: @chat.id  %>
+            <%= submit "submit", class: "ui blue submit icon button", phx_blur: "stop_typing" %>
           <% end %>
         </div>
       </div>
       <div class="members list-group">
         <ul>
           <div class="list-group-item active">
-            <h3>Members</h3>
+            <h3>Active members</h3>
           </div>
           <div class="list-group-item">
             <%= for user <- @users do %>

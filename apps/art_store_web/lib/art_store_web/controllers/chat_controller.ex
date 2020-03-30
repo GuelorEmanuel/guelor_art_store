@@ -11,7 +11,7 @@ defmodule ArtStoreWeb.ChatController do
 
   def index(conn, _params) do
     user_id =  get_session(conn, :user_id)
-    chats = Chats.get_curr_user_chat(user_id)
+    chats = Chats.get_curr_user_chats(user_id)
     render(conn, "index.html", chats: chats)
   end
 
@@ -58,14 +58,38 @@ defmodule ArtStoreWeb.ChatController do
     Logger.warn("result: #{inspect(result ++ chat_participant)}")
     {:ok, result ++ chat_participant}
   end
+
+  defp add_is_group_chat_field(%{"emails" => emails} = params, curr_user_email) do
+     case length(emails) > 1 do
+      true -> {:ok, params, true}
+      false ->
+        [head | _tail] = emails
+        new_map =
+          params
+          |> Map.put("is_group_chat", false)
+          |> Map.put("subject", "#{curr_user_email}#{head}")
+        {:ok, new_map, false}
+     end
+  end
+
+  defp maintain_private_chat_uniqueness(is_group, emails, _curr_user_email) when is_group, do: {:ok, emails}
+  defp maintain_private_chat_uniqueness(_is_group, [head | _tail], curr_user_email) do
+    case Chats.is_private_chat_unique?(head, curr_user_email) do
+      true -> {:ok, head}
+      false -> {:chat_already_exist, head}
+    end
+
+  end
   def create(conn, %{"chat" => chat_params}) do
     # chat_params = Map.put_new(chat_params, "emails", nil)
     emails = chat_params["emails"]
     with {:ok, emails} <- check_emails_uniq(emails),
          {:ok, curr_user} <- check_emails_contains_curr_user_session(conn, emails),
+         {:ok, chat_params, is_group} <- add_is_group_chat_field(chat_params, curr_user.credential.email),
+         {:ok, _} <- maintain_private_chat_uniqueness(is_group, emails, curr_user.credential.email),
          {:ok, credentials} <- check_invited_user_account_exist(emails),
-         {:ok, chat_participant} <- prep_fields_for_create_chat_insert(curr_user, credentials),
-         {:ok, participants} <- Chats.create_chat_with_associationst(chat_params, chat_participant) do
+         {:ok, chat_participants} <- prep_fields_for_create_chat_insert(curr_user, credentials),
+         {:ok, participants} <- Chats.create_chat_with_associationst(chat_params, chat_participants) do
           # Create Chat role
           # Create Chat participants
           chat = List.first(participants).chat
@@ -82,6 +106,9 @@ defmodule ArtStoreWeb.ChatController do
         render(conn, "new.html", changeset: changeset)
       {:not_equal_in_length, _emails} ->
         changeset = Chat.add_errors(chat_params, "Some of the emails dont have an account with us. ")
+        render(conn, "new.html", changeset: changeset)
+      {:chat_already_exist, _} ->
+        changeset = Chat.add_errors(chat_params, "This chat already exist. ")
         render(conn, "new.html", changeset: changeset)
       {:error, %Ecto.Changeset{} = changeset} ->
         Logger.warn("changeset: #{inspect(changeset)}")

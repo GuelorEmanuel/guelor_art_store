@@ -20,12 +20,18 @@
         <div class="item inverted">
           <div class="right floated content">
             <div class="ui button inverted"><%= link "Show", to: Routes.chat_path(@conn, :show, chat) %></div>
-            <div class="ui button inverted"><%= link "Leave", to: Routes.chat_path(@conn, :delete, chat), method: :delete, data: [confirm: "Are you sure?"] %></div>
+            <%= if chat.is_group_chat do %>
+              <div class="ui button inverted"><%= link "Leave", to: Routes.chat_path(@conn, :delete, chat), method: :delete, data: [confirm: "Are you sure?"] %></div>
+            <% end %>
           </div>
           <img class="ui avatar image" src="https://picsum.photos/seed/picsum/200/300">
           <div class="content">
-            <div class="header"><%= chat.subject %></div>
-            An excellent companion
+            <%= if chat.is_group_chat do %>
+              <div class="header"><%= chat.subject %></div>
+            <% end %>
+            <%= if not chat.is_group_chat do %>
+              <div class="header"><%= get_participant_name(chat.participant, @current_user) %></div>
+            <% end %>
           </div>
         </div>
     <% end %>

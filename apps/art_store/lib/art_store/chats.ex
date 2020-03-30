@@ -61,23 +61,24 @@ defmodule ArtStore.Chats do
         preload: [message: :user]
 
     Repo.one(query)
+    |> Repo.preload([participant: :user])
   end
 
-    @doc """
-  Gets a single chat.
+  @doc """
+  Returns the list of chats.
 
-  Raises `Ecto.NoResultsError` if the Chat does not exist.
+  Raises `nil` if the Chats does not exist.
 
   ## Examples
 
-      iex> get_chat!(123)
+      iex> get_curr_user_chats(123)
       %Chat{}
 
-      iex> get_chat!(456)
+      iex> get_curr_user_chats(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_curr_user_chat(id) do
+  def get_curr_user_chats(id) do
     query =
       from c in Chat,
       inner_join: p in assoc(c, :participant),
@@ -85,8 +86,9 @@ defmodule ArtStore.Chats do
 
     query
     |> Repo.all()
-    |> Repo.preload(:participant)
+    |> Repo.preload([participant: :user])
   end
+
   @doc """
   Creates a chat.
 
@@ -105,7 +107,7 @@ defmodule ArtStore.Chats do
     |> Repo.insert()
   end
 
-   @doc """
+  @doc """
   Creates a chat.
 
   ## Examples
@@ -177,6 +179,32 @@ defmodule ArtStore.Chats do
   """
   def change_chat(%Chat{} = chat) do
     Chat.changeset(chat, %{})
+  end
+
+  @doc """
+  Check pivate chat uniqueness.
+
+  ## Examples
+
+      iex> is_private_chat_unique?(emails)
+      true
+
+  """
+  def is_private_chat_unique?(email, curr_user_email) do
+    query =
+      from c in Chat,
+        where: c.subject == ^"#{email}#{curr_user_email}" or c.subject == ^"#{curr_user_email}#{email}"
+
+    query_result =
+      query
+      |> Repo.one()
+
+    Logger.warn("query_result: #{inspect(query_result)}")
+    case query_result do
+      %Chat{} = _chat ->
+        false
+      nil -> true
+    end
   end
 
   alias ArtStore.Chats.Message
