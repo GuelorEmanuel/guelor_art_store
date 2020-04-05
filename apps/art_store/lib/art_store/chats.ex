@@ -451,10 +451,10 @@ defmodule ArtStore.Chats do
     Participant.changeset(participant, %{})
   end
 
-   @doc """
+  @doc """
   Gets a single participant.
 
-  Raises `Ecto.NoResultsError` if the User role does not exist.
+  Raises `Ecto.NoResultsError` if the Participant does not exist.
 
   ## Examples
 
@@ -479,6 +479,27 @@ defmodule ArtStore.Chats do
         participant
       nil -> nil
     end
+  end
+
+  @doc """
+  Get number of participant.
+
+  ## Examples
+
+      iex> get_participant_by_chat_id(123)
+      3
+
+      iex> get_participant_by_chat_id(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_participant_by_chat_id(chat_id) do
+    query =
+      from p in Participant,
+        where: p.chat_id == ^chat_id
+
+    query
+    |> Repo.aggregate(:count)
   end
 
   alias ArtStore.Chats.ChatRole

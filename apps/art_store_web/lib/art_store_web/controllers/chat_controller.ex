@@ -9,6 +9,8 @@ defmodule ArtStoreWeb.ChatController do
   alias ArtStoreWeb.Email
   alias ArtStore.Mailer
 
+  require Logger
+
   def index(conn, _params) do
     user_id =  get_session(conn, :user_id)
     chats = Chats.get_curr_user_chats(user_id)
@@ -185,6 +187,13 @@ defmodule ArtStoreWeb.ChatController do
     String.match?(email, ~r/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i)
   end
 
+  defp check_number_of_user_constraint(chat_id) do
+    case Chats.get_participant_by_chat_id(chat_id) + 1 do
+      11 -> {:chat_room_is_full, chat_id}
+      _ -> {:ok, chat_id}
+    end
+  end
+
   defp check_user_account_exist(email) do
     case Accounts.get_credentials_by_emails([email]) do
       [] -> {:user_not_found, email}
@@ -211,6 +220,7 @@ defmodule ArtStoreWeb.ChatController do
   def add_user_to_chat(conn, %{"email" => email, "chat" => %{"chat_id" => chat_id},
                                "user" => %{"name" => name}}) do
     with true <- is_email_valid?(email),
+         {:ok, _} <- check_number_of_user_constraint(chat_id),
          {:ok, credential} <- check_user_account_exist(email),
          {:ok, user} <- is_user_already_in_chat(chat_id, credential.user),
          {:ok, _participant} <- invite_user_to_chat(chat_id, user.id) do
@@ -234,6 +244,10 @@ defmodule ArtStoreWeb.ChatController do
     {:user_not_found, email} ->
       conn
       |> put_flash(:info, "The following user with email: #{email} doesn't exist.")
+      |> redirect(to: Routes.chat_path(conn, :index))
+    {:chat_room_is_full, _} ->
+      conn
+      |> put_flash(:info, "The chat room is already full.")
       |> redirect(to: Routes.chat_path(conn, :index))
     {:error, message} ->
       conn
