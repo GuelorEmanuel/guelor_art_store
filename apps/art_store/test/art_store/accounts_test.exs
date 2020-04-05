@@ -4,7 +4,7 @@ defmodule ArtStore.AccountsTest do
   alias ArtStore.Accounts
   alias ArtStore.Accounts.User
 
-  @valid_user_attrs %{username: "some  username", verified: true, name: "some name"}
+  @valid_user_attrs %{username: "some  username", verified: true, first_name: "some first name", last_name: "some last name"}
 
   def unload_relations(obj, to_remove \\ nil) do
     assocs =
@@ -24,8 +24,8 @@ defmodule ArtStore.AccountsTest do
   end
 
   describe "users" do
-    @valid_attrs %{username: "some  username", verified: true, name: "some name"}
-    @update_attrs %{username: "some updated  username", verified: false, name: "some updated name"}
+    @valid_attrs %{username: "some  username", verified: true, first_name: "some first name", last_name: "some last name"}
+    @update_attrs %{username: "some updated  username", verified: false, first_name: "some updated first name", last_name: "some updated last name"}
     @invalid_attrs %{username: nil, verified: nil, name: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -41,6 +41,8 @@ defmodule ArtStore.AccountsTest do
       user =
         user_fixture()
         |> Map.put(:credential, nil)
+        |> Map.put(:first_name, nil)
+        |> Map.put(:last_name, nil)
 
       assert Accounts.list_users() == [user]
     end
@@ -49,6 +51,8 @@ defmodule ArtStore.AccountsTest do
       user =
         user_fixture()
         |> Map.put(:credential, nil)
+        |> Map.put(:first_name, nil)
+        |> Map.put(:last_name, nil)
 
       assert Accounts.get_user!(user.id) == user
     end
@@ -57,7 +61,7 @@ defmodule ArtStore.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user. username == "some  username"
       assert user. verified == true
-      assert user.name == "some name"
+      assert user.name == "some first name some last name"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -69,13 +73,15 @@ defmodule ArtStore.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user. username == "some updated  username"
       assert user. verified == false
-      assert user.name == "some updated name"
+      assert user.name == "some updated first name some updated last name"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
       user =
        user_fixture()
        |> Map.put(:credential, nil)
+       |> Map.put(:first_name, nil)
+       |> Map.put(:last_name, nil)
 
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       assert user == Accounts.get_user!(user.id)
