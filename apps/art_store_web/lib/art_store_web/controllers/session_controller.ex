@@ -170,8 +170,6 @@ defmodule ArtStoreWeb.SessionController do
     user_id = "#{get_session_helper(conn)}"
     admin_email = "guelor.emanuel@alumni.carleton.ca"
 
-    Logger.warn("user_params #{inspect(user_params)}")
-
     with {:ok, {verification_code, user}} <- get_user_verification_code(user_id),
          {:ok, user} <- verify_verification_code(verification_code, user_params, user),
          {:ok, new_user} <- Accounts.update_user(user, %{"verified" => true}) do
@@ -224,10 +222,6 @@ defmodule ArtStoreWeb.SessionController do
     update_in(conn.assigns, &Map.drop(&1, [:current_user]))
     |> configure_session(drop: true)
     |> redirect(to: Routes.session_path(conn, :index))
-  end
-
-  defp current_user(user_id) do
-    current_user_from_cache_or_repo(user_id)
   end
 
   defp current_user_from_cache_or_repo(user_id) do

@@ -20,7 +20,7 @@ defmodule ArtStore.Chats.ChatRole do
   @doc false
   def changeset(chat_role, attrs) do
     chat_role
-    |> cast(attrs, [])
+    |> cast(attrs, [:role_id])
     |> validate_required([])
   end
 end

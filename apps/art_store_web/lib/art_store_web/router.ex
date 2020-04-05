@@ -3,8 +3,6 @@ defmodule ArtStoreWeb.Router do
 
   alias ArtStore.Accounts
 
-  require Logger
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -71,6 +69,7 @@ defmodule ArtStoreWeb.Router do
     pipe_through [:browser, :chatter_layout, :auth]
 
     resources "/chats", ChatController
+    post "/add_user_to_chat", ChatController, :add_user_to_chat
   end
 
   scope "/admin", ArtStoreWeb do

@@ -1,6 +1,5 @@
 defmodule ArtStoreWeb.Email do
   import Bamboo.Email
-  require Logger
 
   def verification_code_email(email, verification_code) do
     base_email()
@@ -22,5 +21,16 @@ defmodule ArtStoreWeb.Email do
   defp base_email() do
     new_email()
     |> from("Chatter <#{Application.get_env(:art_store, ArtStore.Mailer)[:ge_public_email]}>")
+  end
+
+  def chat_invite_email(emails, cur_user_name) do
+    base_email()
+    |> to(emails)
+    |> subject("#{cur_user_name} Invited you to chat")
+    |> text_body("Notification")
+    |> html_body("<h1>#{cur_user_name} invited you to chat</h1>
+                  <p>Visit your chatter account to respond to #{cur_user_name} </p>
+                  <p>Thanks, <br>Chatter</p>"
+                )
   end
 end

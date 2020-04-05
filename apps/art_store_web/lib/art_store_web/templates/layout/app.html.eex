@@ -8,6 +8,15 @@
     <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/app.css") %>'/>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://js.stripe.com/v3/"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162287201-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-162287201-1');
+    </script>
     <%= csrf_meta_tag() %>
   </head>
   <body data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0" data-gr-c-s-loaded="true">
@@ -38,6 +47,7 @@
             <a href="<%= Routes.about_path(@conn, :index)%>">About</a>
             <br>
             <b>Elsewhere</b>
+            <a href="https://github.com/GuelorEmanuel">Github</a>
             <a href="https://www.linkedin.com/in/gueloremanuel/">Linkedin</a>
             <a href="https://www.instagram.com/_guelor/">Instagram</a>
           </p>

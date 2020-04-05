@@ -8,8 +8,7 @@ defmodule ArtStore.Chats do
 
   alias ArtStore.Chats
   alias ArtStore.Chats.Chat
-
-  require Logger
+  alias ArtStore.Accounts
 
   @doc """
   Returns the list of chats.
@@ -38,7 +37,7 @@ defmodule ArtStore.Chats do
       ** (Ecto.NoResultsError)
 
   """
-  def get_chat!(id), do: Repo.get!(Chat, id)
+  def get_chat!(id), do: Repo.get!(Chat, id) |> Repo.preload(:participant)
 
   @doc """
   Gets a single chat.
@@ -58,10 +57,9 @@ defmodule ArtStore.Chats do
     query =
       from c in Chat,
         where: c.id == ^id,
-        preload: [message: :user]
+        preload: [message: :user, participant: :user, chat_role: :role]
 
     Repo.one(query)
-    |> Repo.preload([participant: :user])
   end
 
   @doc """
@@ -135,6 +133,29 @@ defmodule ArtStore.Chats do
   end
 
   @doc """
+  Add user to chat.
+
+  ## Examples
+
+      iex> add_user_to_chat(chat_id, user_id)
+      {:ok, %Chat{}}
+
+      iex> add_user_to_chat(%{field: bad_value}, chat_participant)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def add_user_to_chat(chat_id, user_id) do
+    agent_role = Accounts.get_role_by_name("Agent")
+    chat = get_chat(chat_id)
+
+    Repo.transaction(fn ->
+      user = Accounts.get_user!(user_id)
+      create_chat_role(user, chat, agent_role)
+      create_participant(chat, user)
+    end)
+  end
+
+  @doc """
   Updates a chat.
 
   ## Examples
@@ -199,7 +220,6 @@ defmodule ArtStore.Chats do
       query
       |> Repo.one()
 
-    Logger.warn("query_result: #{inspect(query_result)}")
     case query_result do
       %Chat{} = _chat ->
         false
@@ -493,6 +513,28 @@ defmodule ArtStore.Chats do
   def get_chat_role!(id), do: Repo.get!(ChatRole, id)
 
   @doc """
+  Returns user role for the current chat.
+
+  ## Examples
+
+      iex> get_curr_user_chats_role(123, 1)
+      %ChatRole{}
+
+      iex> get_curr_user_chats_role(456, 23)
+      ** nil
+
+  """
+  def get_curr_user_chats_role(chat_id, user_id) do
+    query =
+      from c in ChatRole,
+      where: c.user_id == ^user_id and c.chat_id == ^chat_id
+
+    query
+    |> Repo.one()
+    |> Repo.preload(:role)
+  end
+
+  @doc """
   Creates a chat_role.
 
   ## Examples
@@ -547,6 +589,15 @@ defmodule ArtStore.Chats do
     chat_role
     |> ChatRole.changeset(attrs)
     |> Repo.update()
+  end
+
+  def swap_chat_role(agent_chat_role, admin_chat_role) do
+    %{role_id: admin_role_id} = admin_chat_role
+    %{role_id: agent_role_id} = agent_chat_role
+    Repo.transaction(fn ->
+      update_chat_role(admin_chat_role, %{role_id: agent_role_id})
+      update_chat_role(agent_chat_role, %{role_id: admin_role_id})
+    end)
   end
 
   @doc """

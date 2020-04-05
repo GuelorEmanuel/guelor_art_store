@@ -13,7 +13,7 @@ defmodule ArtStore.Chats.Chat do
     field :subject, :string
     field :is_group_chat, :boolean, default: true
     field :emails, {:array, :string}, virtual: true
-    has_one :chat_role, ChatRole
+    has_many :chat_role, ChatRole
     has_many :participant, Participant
     has_many :message, Message
 

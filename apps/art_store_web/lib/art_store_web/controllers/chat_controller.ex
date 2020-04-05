@@ -6,8 +6,8 @@ defmodule ArtStoreWeb.ChatController do
   alias ArtStore.Chats.Chat
   alias Phoenix.LiveView
   alias ArtStoreWeb.ChatLive.Index
-
-  require Logger
+  alias ArtStoreWeb.Email
+  alias ArtStore.Mailer
 
   def index(conn, _params) do
     user_id =  get_session(conn, :user_id)
@@ -20,8 +20,9 @@ defmodule ArtStoreWeb.ChatController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  defp check_emails_uniq(emails) when length(emails) == 1, do: {:ok, emails}
-  defp check_emails_uniq(emails) do
+  defp verify_emails(emails) when length(emails) == 1, do: {:ok, emails}
+  defp verify_emails(emails) when length(emails) > 9, do: {:exceed_maximum_parti, emails}
+  defp verify_emails(emails) do
     case length(emails) == length(Enum.uniq(emails)) do
       true -> {:ok, emails}
       false -> {:not_unique, emails}
@@ -32,7 +33,6 @@ defmodule ArtStoreWeb.ChatController do
     user_id =  get_session(conn, :user_id)
     curr_user = current_user_from_cache_or_repo(user_id)
     %{:credential => %{:email => value}} = curr_user
-
     case Enum.member?(emails, value) do
       true -> {:curr_user_email_exist, curr_user}
       false -> {:ok, curr_user}
@@ -49,13 +49,12 @@ defmodule ArtStoreWeb.ChatController do
   end
 
   defp prep_fields_for_create_chat_insert(curr_user, credentials) do
-    Logger.warn("list_roles: #{inspect(Accounts.list_roles())}")
     chat_participant = [%{user: curr_user, role: Accounts.get_role_by_name("Owner")}]
+    agent_role = Accounts.get_role_by_name("Agent")
 
     result = Enum.reduce credentials, [], fn credential, acc ->
-      acc = [%{user: credential.user, role: Accounts.get_role_by_name("Agent")}] ++ acc
+      [%{user: credential.user, role: agent_role}] ++ acc
     end
-    Logger.warn("result: #{inspect(result ++ chat_participant)}")
     {:ok, result ++ chat_participant}
   end
 
@@ -81,19 +80,22 @@ defmodule ArtStoreWeb.ChatController do
 
   end
   def create(conn, %{"chat" => chat_params}) do
-    # chat_params = Map.put_new(chat_params, "emails", nil)
     emails = chat_params["emails"]
-    with {:ok, emails} <- check_emails_uniq(emails),
+
+    with {:ok, emails} <- verify_emails(emails),
          {:ok, curr_user} <- check_emails_contains_curr_user_session(conn, emails),
          {:ok, chat_params, is_group} <- add_is_group_chat_field(chat_params, curr_user.credential.email),
          {:ok, _} <- maintain_private_chat_uniqueness(is_group, emails, curr_user.credential.email),
          {:ok, credentials} <- check_invited_user_account_exist(emails),
          {:ok, chat_participants} <- prep_fields_for_create_chat_insert(curr_user, credentials),
          {:ok, participants} <- Chats.create_chat_with_associationst(chat_params, chat_participants) do
-          # Create Chat role
-          # Create Chat participants
+
+          emails
+          |> Email.chat_invite_email(curr_user.name)
+          |> Mailer.deliver_later() # Sends an email in the background using Task.Supervisor.
+
           chat = List.first(participants).chat
-          Logger.warn("chat: #{inspect(chat)}")
+
           conn
           |> put_flash(:info, "Chat created successfully.")
           |> redirect(to: Routes.chat_path(conn, :show, chat))
@@ -110,8 +112,10 @@ defmodule ArtStoreWeb.ChatController do
       {:chat_already_exist, _} ->
         changeset = Chat.add_errors(chat_params, "This chat already exist. ")
         render(conn, "new.html", changeset: changeset)
+      {:exceed_maximum_parti, _} ->
+        changeset = Chat.add_errors(chat_params, "Group chat can only be between 3-10 users. ")
+        render(conn, "new.html", changeset: changeset)
       {:error, %Ecto.Changeset{} = changeset} ->
-        Logger.warn("changeset: #{inspect(changeset)}")
         render(conn, "new.html", changeset: changeset)
     end
   end
@@ -154,12 +158,95 @@ defmodule ArtStoreWeb.ChatController do
     end
   end
 
+  defp handle_delete_chat(conn, chat_id, %{participant: participants} = chat) do
+    user_id = get_session(conn, :user_id)
+    chat_role = Chats.get_curr_user_chats_role(chat_id, user_id)
+    %{role: %{role_name: role_name}} = chat_role
+
+    participant = Enum.find(participants, fn(participant) ->
+      participant.user_id == user_id
+    end)
+
+    case role_name do
+      "Agent" ->
+        {:ok, _chat} = Chats.delete_participant(participant)
+
+        conn
+        |> put_flash(:info, "You left chat successfully.")
+      "Owner" ->
+        {:ok, _chat} = Chats.delete_chat(chat)
+
+        conn
+        |> put_flash(:info, "Chat deleted successfully.")
+    end
+  end
+
+  defp is_email_valid?(email) do
+    String.match?(email, ~r/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i)
+  end
+
+  defp check_user_account_exist(email) do
+    case Accounts.get_credentials_by_emails([email]) do
+      [] -> {:user_not_found, email}
+      [head| _tail] -> {:ok, head}
+    end
+  end
+
+  defp is_user_already_in_chat(chat_id, user) do
+    case Chats.get_participant_by_user_id(%{"chat_id" => chat_id, "user_id" => user.id}) do
+      nil ->
+        {:ok, user}
+      _participant ->
+        {:user_already_exist, user}
+    end
+  end
+
+  defp invite_user_to_chat(chat_id, user_id) do
+    case Chats.add_user_to_chat(chat_id, user_id) do
+      {:ok, participant} -> {:ok, participant}
+      _ -> {:error, "Something went wrong"}
+    end
+  end
+
+  def add_user_to_chat(conn, %{"email" => email, "chat" => %{"chat_id" => chat_id},
+                               "user" => %{"name" => name}}) do
+    with true <- is_email_valid?(email),
+         {:ok, credential} <- check_user_account_exist(email),
+         {:ok, user} <- is_user_already_in_chat(chat_id, credential.user),
+         {:ok, _participant} <- invite_user_to_chat(chat_id, user.id) do
+
+          [email]
+          |> Email.chat_invite_email(name)
+          |> Mailer.deliver_later() # Sends an email in the background using Task.Supervisor.
+
+          conn
+          |> put_flash(:info, "#{user.name} has been added to chat.")
+          |> redirect(to: Routes.chat_path(conn, :index))
+    else
+    false ->
+      conn
+      |> put_flash(:info, "#{email} is not a valid email address.")
+      |> redirect(to: Routes.chat_path(conn, :index))
+    {:user_already_exist, user} ->
+      conn
+      |> put_flash(:info, "#{user.name} is already in this chat.")
+      |> redirect(to: Routes.chat_path(conn, :index))
+    {:user_not_found, email} ->
+      conn
+      |> put_flash(:info, "The following user with email: #{email} doesn't exist.")
+      |> redirect(to: Routes.chat_path(conn, :index))
+    {:error, message} ->
+      conn
+      |> put_flash(:info, message)
+      |> redirect(to: Routes.chat_path(conn, :index))
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
     chat = Chats.get_chat!(id)
-    {:ok, _chat} = Chats.delete_chat(chat)
 
     conn
-    |> put_flash(:info, "Chat deleted successfully.")
+    |> handle_delete_chat(id, chat)
     |> redirect(to: Routes.chat_path(conn, :index))
   end
 

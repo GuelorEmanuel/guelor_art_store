@@ -75,6 +75,36 @@ defmodule ArtStoreWeb.ChatLive.Index do
     {:noreply, assign(socket, message: message)}
   end
 
+  def handle_event("user_selected", %{"user" => ""}, socket),
+    do: {:noreply, assign(socket,:user, nil)}
+
+  def handle_event("user_selected", %{"user" => user_id_and_chat_id}, socket) do
+    <<user_id, chat_id, curr_user_id>> = user_id_and_chat_id
+    agent_chat_role = Chats.get_curr_user_chats_role(chat_id, user_id)
+    admin_chat_role = Chats.get_curr_user_chats_role(chat_id, curr_user_id)
+
+    with true <- is_chat_role_name_Admin?(admin_chat_role),
+         {:ok, _} <- Chats.swap_chat_role(agent_chat_role, admin_chat_role) do
+          Logger.warn("agent_chat_role: #{inspect(agent_chat_role)}")
+          {:noreply,
+            socket
+            |> put_flash(:notice, "You are no longer admin of this chat room")
+          }
+    else
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+      false ->
+        {:noreply,
+          socket
+          |> put_flash(:notice, "You dont have permission to change the room role")
+        }
+    end
+  end
+
+  defp is_chat_role_name_Admin?(admin_chat_role) do
+    admin_chat_role.role.role_name == "Owner"
+  end
+
   defp default_user_presence_payload(user) do
     %{
       typing: false,
