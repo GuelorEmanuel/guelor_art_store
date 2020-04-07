@@ -6,7 +6,7 @@
         <i class="sidebar icon"></i>
       </a>
       <a class="item" href="<%= Routes.chat_path(@socket, :index)%>"><- Back</a>
-      <%= if is_chat_role_name_Admin?(@chat.chat_role, @current_user) do %>
+      <%= if is_chat_role_name_Admin?(@chat.chat_role, @current_user) and @chat.is_group_chat do %>
        <%= render "chat_form.html", chat: @chat, current_user: @current_user %>
       <% end %>
     </div>

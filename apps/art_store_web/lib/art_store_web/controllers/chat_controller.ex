@@ -22,6 +22,7 @@ defmodule ArtStoreWeb.ChatController do
     render(conn, "new.html", changeset: changeset)
   end
 
+  defp verify_emails(nil), do: {:empty_emails_given, "Email cannot be empty, "}
   defp verify_emails(emails) when length(emails) == 1, do: {:ok, emails}
   defp verify_emails(emails) when length(emails) > 9, do: {:exceed_maximum_parti, emails}
   defp verify_emails(emails) do
@@ -116,6 +117,9 @@ defmodule ArtStoreWeb.ChatController do
         render(conn, "new.html", changeset: changeset)
       {:exceed_maximum_parti, _} ->
         changeset = Chat.add_errors(chat_params, "Group chat can only be between 3-10 users. ")
+        render(conn, "new.html", changeset: changeset)
+      {:empty_emails_given , message} ->
+        changeset = Chat.add_errors(chat_params, message)
         render(conn, "new.html", changeset: changeset)
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

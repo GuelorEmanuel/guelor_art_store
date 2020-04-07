@@ -15,9 +15,9 @@ config :art_store_web, ArtStoreWeb.Endpoint,
   server: false
 
 config :cloudex,
-  api_key: "915756558412773",
-  secret: "VyH8QnQKXs6sXdJDSuapJ1HbFi4",
-  cloud_name: "gueloremanuel-com"
+  api_key: System.get_env("CLOUDEX_API_KEY"),
+  secret: System.get_env("CLOUDEX_SECRET"),
+  cloud_name: System.get_env("CLOUDEX_CLOUD_NAME")
 
 # Print only warnings and errors during test
 config :logger, level: :warn
