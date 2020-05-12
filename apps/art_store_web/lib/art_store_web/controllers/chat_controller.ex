@@ -132,7 +132,7 @@ defmodule ArtStoreWeb.ChatController do
     case Chats.get_participant_by_user_id(%{"chat_id" => id, "user_id" => user_id}) do
       nil ->
         conn
-        |> put_flash(:info, "Chat updated successfully.")
+        |> put_flash(:info, "Chat couldn't be found.")
         |> redirect(to: Routes.chat_path(conn, :index))
       _ ->
         chat = Chats.get_chat(id)
@@ -273,4 +273,13 @@ defmodule ArtStoreWeb.ChatController do
       Accounts.get_user!(user_id)
     end)
   end
+
+  # Every controller has its own default action function.
+  # It’s a plug that dispatches to the proper action at the end of the controller pipeline.
+
+  # def action(conn, _) do
+  #   # test this: conn.assigns.current_user
+  #   apply(__MODULE__, action_name(conn),
+  #   [conn, conn.params, conn.assigns.current_user])
+  # end
 end

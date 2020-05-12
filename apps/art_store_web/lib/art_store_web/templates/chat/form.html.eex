@@ -6,9 +6,9 @@
   <% end %>
 
   <%= label f, :subject %>
-  <%= text_input f, :subject %>
+  <%= text_input f, :subject, placeholder: "Chat name"%>
   <%= error_tag f, :subject %>
-  <%= array_input f, :emails %>
+  <%= array_input f, :emails%>
   <%= error_tag f, :emails %>
   <%= array_add_button f, :emails %>
 

@@ -21,8 +21,10 @@ defmodule ArtStoreWeb.ChatView do
 
   def filter_messages_by_joined_date(_participants, _current_user, messages, false), do: messages
   def filter_messages_by_joined_date(participants, current_user, messages, true) do
-    %{inserted_at: inserted_at} = p = Enum.find(participants, fn(participant) ->
-      participant.user_id == current_user.id end)
+    %{inserted_at: inserted_at} =
+      Enum.find(participants, fn(participant) ->
+        participant.user_id == current_user.id
+      end)
     Enum.filter(messages, fn(message) ->
       case DateTime.compare(message.inserted_at, inserted_at) do
         :gt -> true
