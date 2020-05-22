@@ -5,6 +5,8 @@
     <img src='<%= Routes.static_path(@conn, "/images/guelor-portrait.jpg") %>' class="bio_portrait aos-init aos-animate" alt="picture of Guelor Emanuel" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-out-quad">
     <div data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-out-quad" class="aos-init">
         <p>My last 4 years have been spent learning about software engineering and creating things, mostly software. My most recent role was at <a href="https://www.pagerduty.com/">PagerDuty</a>, as a Software Engineer intern, I primarily focused on their Log Entry Service on their Visibility team in Toronto. I did this while learning on the side as a way to foster growth in my profession.</p>
+        <p>These days I actively contribute to open-source projects such as <a href="https://www.jenkins.io/">Jenkins</a> and other projects.</p>
         <p>My spare time is spent drawing, creating software, reading, studying, and attending Muay Thai classes.</p>
+        <p>There is no CV on this site, but there is a not-so-up-to-date profile on LinkedIn.</p>
     </div>
 </div>
