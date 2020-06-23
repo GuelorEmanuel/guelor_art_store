@@ -1,4 +1,4 @@
-# ArtStore.Umbrella
+# Guelor Emanuel personal website
 
 This is my personal website, you can check it out at [gueloremanuel](https://gueloremanuel.com/).
 
