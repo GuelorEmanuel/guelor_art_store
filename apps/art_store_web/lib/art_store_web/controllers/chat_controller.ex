@@ -231,7 +231,7 @@ defmodule ArtStoreWeb.ChatController do
 
           [email]
           |> Email.chat_invite_email(name)
-          |> Mailer.deliver_later() # Sends an email in the background using Task.Supervisor.
+          |> Mailer.deliver_later() # Sends an email in the background using Task.Supervisor
 
           conn
           |> put_flash(:info, "#{user.name} has been added to chat.")
