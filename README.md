@@ -22,3 +22,5 @@ To start your Phoenix server:
 * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit my art store or personal website at`localhost:4000` or the chat app at `localhost:4000/chatter`, to signup or login to an already existing account.
+
+In order to acces the admin route for the art store you will first need to login at `localhost:4000/chatter/login` 
